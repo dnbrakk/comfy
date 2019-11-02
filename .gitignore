@@ -1,0 +1,6 @@
+build/*
+comfy
+ecom.sh
+*.swp
+session.vim
+
