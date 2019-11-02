@@ -1,5 +1,7 @@
 # Comfy
 
+**Current Version:** 1.0 Alpha
+
 [https://wolfish.neocities.org/soft/comfy/](https://wolfish.neocities.org/soft/comfy)
 
 Comfy is a console application for browsing imageboards that can display images. Comfy is written in C++, is multithreaded, and is very /comfy/ to use.
@@ -10,14 +12,12 @@ Comfy has its own widget system for drawing to the terminal built on top of Term
 
 Currently, Comfy has only been tested on Debian 9 (Stretch) stable. Please let me know what systems you are able to get it to compile and run on.
 
-**Current Version:** 1.0 Alpha
-
 ### Get, Compile, and Run
 
 ##### On Debian:
 
 ```
-apt-get install 
+apt-get install git make pkg-config g++ libx11-dev libimlib2-dev libcurl4-openssl-dev
 git clone https://gitgud.io/wolfish/comfy
 cd comfy
 make
@@ -55,22 +55,22 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 
 #### Controls
 
-**Backspace / CTRL+H** Go to homescreen, or go back one level in list.
-**CTRL+Q** Quit.
-**CTRL+X** Close catalog or thread.
-**CTRL+R** Reload the focused page from the network.
-**CTRL+A** Enable/disable auto-refresh of focused page.
-**CTRL+S** Save currently focused thread.
-**F5** Do a hard refresh of the screen (e.g. to clear out artifacts).
-**Tab** Switch between currently opened pages.
-**Space / Enter** Choose selection in list.
-**Up / Down Arrow Keys** Scroll up/down one line at a time.
-**Left / Right Arrow Keys** Scroll up/down one screen at a time.
-**Page Up / Down** Scroll up/down one screen at a time.
-**Home** Go to top of page.
-**End** Go to bottom of page.
-**Left-Click** Open a thread in a catalog, full screen/close an image in a thread, or go to a post in a thread (by clicking the post number link in a post).
-**Mouse Wheel** Scroll the currently focused page.
+- **Backspace / CTRL+H** Go to homescreen, or go back one level in list.
+- **CTRL+Q** Quit.
+- **CTRL+X** Close catalog or thread.
+- **CTRL+R** Reload the focused page from the network.
+- **CTRL+A** Enable/disable auto-refresh of focused page.
+- **CTRL+S** Save currently focused thread.
+- **F5** Do a hard refresh of the screen (e.g. to clear out artifacts).
+- **Tab** Switch between currently opened pages.
+- **Space / Enter** Choose selection in list.
+- **Up / Down Arrow Keys** Scroll up/down one line at a time.
+- **Left / Right Arrow Keys** Scroll up/down one screen at a time.
+- **Page Up / Down** Scroll up/down one screen at a time.
+- **Home** Go to top of page.
+- **End** Go to bottom of page.
+- **Left-Click** Open a thread in a catalog, full screen/close an image in a thread, or go to a post in a thread (by clicking the post number link in a post).
+- **Mouse Wheel** Scroll the currently focused page.
 
 ### Planned Features
 
@@ -114,5 +114,9 @@ Will write a small style guide later.
 
 ### License
 
-Comfy is released under the GNU General Public License v2.0 only.
+Comfy is licensed under the GNU General Public License v2.0 only.
+
+### Supporting Development
+
+If you think Comfy is rather cool and would like to support its development, please consider [leaving a donation](https://wolfish.neocities.org/posts/updates/donate/). :^) Thank you.
 
