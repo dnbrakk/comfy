@@ -12,14 +12,7 @@ Comfy has its own widget system for drawing to the terminal built on top of Term
 
 Currently, Comfy has only been tested on Debian 9 (Stretch). Please let me know what other systems you are able to get it to compile and run on.
 
-<div style="width:100%; overflow: auto;">
-    <div style="float:left; width:50%;">
-        <img style="display:block; float:right; margin-right:1em;" title="Comfy browsing a board catalog" src="https://files.catbox.moe/91kw91.gif" />
-    </div>
-    <div style="float:left; width:50%;">
-        <img style="display:block; float:left; margin-left:1em;" title="Comfy browsing a board catalog" src="https://files.catbox.moe/zwzp7y.gif" />
-    </div>
-</div>
+![Comfy browsing a thread](https://files.catbox.moe/91kw91.gif) &nbsp;&nbsp;&nbsp; ![Comfy browsing a thread](https://files.catbox.moe/zwzp7y.gif)  
 
 ### Get, Compile, and Run
 
@@ -48,14 +41,7 @@ Comfy should run in many other terminal emulators, but images sometimes will not
 
 At present, a mouse is required to browse as there is currently no way to select and open threads in a board catalog without clicking; keyboard controls for selecting and opening threads will be added soon.
 
-<div style="width:100%; overflow: auto;">
-    <div style="float:left; width:50%;">
-        <img style="display:block; float:right; margin-right:1em;" title="Comfy browsing a thread" src="https://files.catbox.moe/fkgy50.gif" />
-    </div>
-    <div style="float:left; width:50%;">
-        <img style="display:block; float:left; margin-left:1em;" title="Comfy browsing a thread" src="https://files.catbox.moe/md2oea.gif" />
-    </div>
-</div>
+![Comfy browsing a thread](https://files.catbox.moe/fkgy50.gif) &nbsp;&nbsp;&nbsp; ![Comfy browsing a thread](https://files.catbox.moe/md2oea.gif)  
 
 ### Using
 
