@@ -135,28 +135,6 @@ void HomescreenWidget::tick_event(std::chrono::milliseconds delta)
 }
 
 
-void HomescreenWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
-{
-    if (_child_widget)
-    {
-        if (child_widget)
-        {
-            child_widget->set_parent_widget(nullptr);
-        }
-
-        _child_widget->set_parent_widget(this);
-        _child_widget->set_inherited_padding(child_padding);
-        _child_widget->update_size();
-        child_widget = _child_widget;
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
 void HomescreenWidget::show_4chan_boards_list(HomescreenWidget* hs)
 {
     if (!hs || !hs->get_content_box()) return;
@@ -354,10 +332,11 @@ void HomescreenWidget::rebuild(bool b_rebuild_children)
             und += L"\u2500";
         }
         und += motd;
-        for (int i = 0; i < logo_text->get_size().x - motd.length() - 3; ++i)
+        for (int i = 0; i < logo_text->get_size().x - 1 - motd.length() - 3; ++i)
         {
             und += L"\u2500";
         }
+        und += L" ";    // match trailing space on logo text lines
 
         und_text = std::make_shared<TextWidget>(
             vector2d(),
@@ -414,7 +393,7 @@ void HomescreenWidget::rebuild(bool b_rebuild_children)
     main_box->set_child_widget(vbox);
     vector4d pad = main_box->get_child_padding();
     // force min size of box to be size of logo text
-    main_box->set_min_width(logo_text->get_size().x + pad.a + pad.c);
+    main_box->set_min_width(logo_text->get_size().x - 1 + pad.a + pad.c);
 
     set_child_widget(main_box, false);
     main_box->rebuild(true);

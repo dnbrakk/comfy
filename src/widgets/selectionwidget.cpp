@@ -145,28 +145,6 @@ void SelectionWidget::add_selection(std::string name, std::function<void()> fn)
 }
 
 
-void SelectionWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
-{
-    if (_child_widget)
-    {
-        if (child_widget)
-        {
-            child_widget->set_parent_widget(nullptr);
-        }
-
-        _child_widget->set_parent_widget(this);
-        _child_widget->set_inherited_padding(child_padding);
-        _child_widget->update_size();
-        child_widget = _child_widget;
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
 void SelectionWidget::handle_term_resize_event()
 {
     rebuild(true);

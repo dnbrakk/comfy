@@ -1,16 +1,25 @@
 # Comfy
 
-**Current Version:** 1.0 Alpha
+**Version:** 1.0.1
 
 [https://wolfish.neocities.org/soft/comfy/](https://wolfish.neocities.org/soft/comfy)
 
-Comfy is a console application for browsing imageboards that can display images. Comfy is written in C++, is multithreaded, and is very /comfy/ to use.
+Comfy is a console application for browsing imageboards. Comfy is written in C++, is multithreaded, supports displaying images, and is very /comfy/ to use.
 
-Right now it only parses 4chan json, but support for other imageboards will be added in the future.
+Right now Comfy only parses 4chan json, but support for other imageboards will be added in the future.
 
 Comfy has its own widget system for drawing to the terminal built on top of Termbox. Images are loaded as pixmaps using Imlib2 and drawn to the terminal emulator window in the X Window System. Text-only mode can be used to browse without X (such as in a TTY).
 
-Currently, Comfy has only been tested on Debian 9 (Stretch) stable. Please let me know what systems you are able to get it to compile and run on.
+Currently, Comfy has only been tested on Debian 9 (Stretch). Please let me know what other systems you are able to get it to compile and run on.
+
+<div style="width:100%; overflow: auto;">
+    <div style="float:left; width:50%;">
+        <img style="display:block; float:right; margin-right:1em;" title="Comfy browsing a board catalog" src="https://files.catbox.moe/91kw91.gif" />
+    </div>
+    <div style="float:left; width:50%;">
+        <img style="display:block; float:left; margin-left:1em;" title="Comfy browsing a board catalog" src="https://files.catbox.moe/zwzp7y.gif" />
+    </div>
+</div>
 
 ### Get, Compile, and Run
 
@@ -39,15 +48,24 @@ Comfy should run in many other terminal emulators, but images sometimes will not
 
 At present, a mouse is required to browse as there is currently no way to select and open threads in a board catalog without clicking; keyboard controls for selecting and opening threads will be added soon.
 
+<div style="width:100%; overflow: auto;">
+    <div style="float:left; width:50%;">
+        <img style="display:block; float:right; margin-right:1em;" title="Comfy browsing a thread" src="https://files.catbox.moe/fkgy50.gif" />
+    </div>
+    <div style="float:left; width:50%;">
+        <img style="display:block; float:left; margin-left:1em;" title="Comfy browsing a thread" src="https://files.catbox.moe/md2oea.gif" />
+    </div>
+</div>
+
 ### Using
 
 Comfy can open URLs that are fed to it via the command-line. Currently only 4chan board catalogs and threads are supported. If no URLs are provided, the homescreen is displayed, from which you can navigate to the officially suported imageboards or open saved threads.
 
 Running Comfy with '-d' or '--disable-images' will activate text-only mode and images won't be downloaded or displayed. Running Comfy outside of X with images enabled usually causes it to crash (working on fixing this), so be sure to run with images disabled if you do.
 
-You can set the max number of concurrent threads Comfy is allowed to use with '-m n' or '--max-threads n' where 'n' is the maximum number of threads. By default, Comfy sets the maximum number of threads to the total number of threads available on the system - 1 (e.g. if your CPU has 4 cores, Comfy will set the max threads to 3). The default setting seems to work well enough, but feel free to experiment with this. Be aware that if you set this number too high your system will lock up when Comfy is downloading images or doing other work.
+You can set the max number of concurrent threads Comfy is allowed to use with '-m n' or '--max-threads n' where 'n' is the maximum number of threads. By default, Comfy sets the maximum number of threads to the total number of CPU cores available on the system - 1 (e.g. if your CPU has 4 cores, Comfy will set the max threads to 3). The default setting seems to work well enough, but feel free to experiment with this. Be aware that if you set this number too high your system will lock up when Comfy is downloading images or doing other work.
 
-Threads can be saved by pressing CTRL+S while viewing a thread. Doing so prevents the thread's json and images from being deleted from Comfy's cache directory (located in $HOME/.comfy/) when the program terminates, and the thread will be listed in the saved threads list accessible from the homescreen.
+Imageboard threads can be saved by pressing CTRL+S while viewing a thread. Doing so prevents the thread's json and images from being deleted from Comfy's cache directory (located in $HOME/.comfy/) when the program terminates, and the thread will be listed in the saved threads list accessible from the homescreen.
 
 Mouse input is supported: Pages can be scrolled using the mouse wheel, threads can be opened by left-clicking them, images in threads can be full screened/closed by left-clicking on them, and posts can be jumped to in a thread by clicking post num links.
 
@@ -75,8 +93,10 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 ### Planned Features
 
 - Save images to arbitrary dir (e.g. by right-clicking the image).
+- Reduce thread box size in catalog when images are disabled.
 - Navigate catalog and open threads with keyboard only.
 - Color scheme chooser; load color schemes from disk.
+- 16 color color schemes for TTYs and terminal emulators that don't support 256 colors.
 - Copy URLs to clipboard on click.
 - Animate GIFs.
 - Options screen for setting various defaults (such as thread refresh interval).
@@ -97,6 +117,7 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 
 ### Known Problems
 
+- Images do not display correctly when running Comfy inside of tmux (artifacts do not get removed when scrolling, and when run in a split pane the images are in the wrong location). Term cell colors also do not display correctly.
 - Application will crash if images are enabled and Comfy is run by another user than the one that is logged into the X Session the terminal emulator is running in (e.g. if you switch users using 'su user' then run comfy).
 - Intense image flickering for a few seconds after resizing terminal window using the mouse (e.g. by dragging an edge or corner of the window). Really not sure what causes this.
 - Brief image flickering in some terminal emulators when scrolling catalog pages when the column width of threads displayed is greater than two.

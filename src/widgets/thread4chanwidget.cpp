@@ -484,28 +484,6 @@ bool Thread4chanWidget::receive_img_packet(img_packet& pac)
 }
 
 
-void Thread4chanWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
-{
-    if (_child_widget)
-    {
-        if (child_widget)
-        {
-            child_widget->set_parent_widget(nullptr);
-        }
-
-        _child_widget->set_parent_widget(this);
-        _child_widget->set_inherited_padding(child_padding);
-        _child_widget->update_size();
-        child_widget = _child_widget;
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
 void Thread4chanWidget::on_focus_received()
 {
     // only update size and rebuild if term size has changed
@@ -530,15 +508,18 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
     // reload thread
     if (input_event.key == TB_KEY_CTRL_R)
     {
-        auto_refresh_counter = std::chrono::milliseconds(0);
-        reload_flash_count = 0;
-        b_reload_flash_sym = true;
-        b_reloading = true;
-        b_manual_update = true;
+        if (!b_reloading)
+        {
+            auto_refresh_counter = std::chrono::milliseconds(0);
+            reload_flash_count = 0;
+            b_reload_flash_sym = true;
+            b_reloading = true;
+            b_manual_update = true;
 
-        NetOps::http_get__4chan_json(thread_url, last_update_time);
+            NetOps::http_get__4chan_json(thread_url, last_update_time);
 
-        WIDGET_MAN.draw_widgets();
+            WIDGET_MAN.draw_widgets();
+        }
 
         b_handled = true;
     }

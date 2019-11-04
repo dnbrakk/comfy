@@ -27,4 +27,5 @@
 #include "chanwidget.h"
 #include "wrapgrid.h"
 #include "homescreenwidget.h"
+#include "multichildwidget.h"
 

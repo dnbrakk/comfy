@@ -108,6 +108,7 @@ protected:
 
 public:
 
+    virtual void set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild = true);
     std::shared_ptr<TermWidget> get_child_widget() { return child_widget; };
 
     void set_id(std::string _id) { id = _id; };

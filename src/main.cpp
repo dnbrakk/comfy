@@ -20,6 +20,7 @@ int MAX_THREADS = -1;
 
 // ------ defined extern in comfy.h:
 std::string DATA_DIR = ".comfy/";
+std::string IMAGEBOARDS_DIR = DATA_DIR + "imageboards/";
 std::string TEMP_DIR = DATA_DIR + "tmp/";
 std::string FLAGS_DIR = DATA_DIR + "4chan/flags/";
 Colors::color_scheme COLO = Colors::COMFYBLUE;
@@ -31,8 +32,9 @@ void init_files()
 {
     string home_dir = getenv("HOME");
     DATA_DIR = home_dir + "/.comfy/";
+    IMAGEBOARDS_DIR = DATA_DIR + "imageboards/";
     TEMP_DIR = DATA_DIR + "tmp/";
-    FLAGS_DIR = DATA_DIR + "4chan/flags/";
+    FLAGS_DIR = DATA_DIR + "imageboards/4chan/flags/";
 
     FileOps::mkdir(DATA_DIR);
 
@@ -45,7 +47,8 @@ void init_files()
 
 void clean_up_files()
 {
-    FileOps::recursively_delete_all_unsaved_dirs(DATA_DIR);
+    FileOps::recursively_delete_all_unsaved_dirs(IMAGEBOARDS_DIR);
+    FileOps::recursively_delete_all_unsaved_dirs(TEMP_DIR);
 }
 
 

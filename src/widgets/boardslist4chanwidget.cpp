@@ -90,30 +90,6 @@ void BoardsList4chanWidget::rebuild(bool b_rebuild_children)
 }
 
 
-
-
-void BoardsList4chanWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
-{
-    if (_child_widget)
-    {
-        if (child_widget)
-        {
-            child_widget->set_parent_widget(nullptr);
-        }
-
-        _child_widget->set_parent_widget(this);
-        _child_widget->set_inherited_padding(child_padding);
-        _child_widget->update_size();
-        child_widget = _child_widget;
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
 void BoardsList4chanWidget::on_focus_received()
 {
     // switch focus to parent widget that is managed

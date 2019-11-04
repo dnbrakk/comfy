@@ -80,9 +80,15 @@ std::string TermWidget::get_title() const
 
 void TermWidget::set_parent_widget(TermWidget* _parent_widget)
 {
-    // TODO: disallow setting child or sub-child as parent widget
-    //       to prevent potential infinite loops
-    parent_widget = _parent_widget;
+    // prevent setting child or sub-child as parent
+    if (_parent_widget && !_parent_widget->is_child_of(this))
+    {
+        parent_widget = _parent_widget;
+    }
+    else if (!_parent_widget)
+    {
+        parent_widget = nullptr;
+    }
 }
 
 
@@ -290,6 +296,33 @@ int TermWidget::get_height_constraint() const
     }
 
     return constraint;
+}
+
+
+void TermWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
+{
+    // prevent parent widgets from being set as child widget
+    if (_child_widget && !is_child_of(_child_widget.get()))
+    {
+        if (child_widget)
+        {
+            child_widget->set_parent_widget(nullptr);
+        }
+
+        _child_widget->set_parent_widget(this);
+        _child_widget->set_inherited_padding(child_padding);
+        _child_widget->update_size();
+        child_widget = _child_widget;
+    }
+    else if (!_child_widget)
+    {
+        child_widget = nullptr;
+    }
+
+    if (b_rebuild)
+    {
+        rebuild();
+    }
 }
 
 

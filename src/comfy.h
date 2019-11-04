@@ -34,9 +34,10 @@
 #define IMG_MAN             ImgMan::get_instance()
 
 
-static const std::string VERSION = "v. 1.0a";
+static const std::string VERSION = "v. 1.0.1";
 
 extern std::string DATA_DIR;
+extern std::string IMAGEBOARDS_DIR;
 extern std::string TEMP_DIR;
 extern std::string FLAGS_DIR;
 static const std::string SAVE_FILE = ".comfy.save";
@@ -85,7 +86,7 @@ static std::string get_file_save_dir(HTML_Utils::url_parser& parser, std::string
     using namespace std;
     using namespace HTML_Utils;
 
-    std::string path = DATA_DIR;
+    std::string path = IMAGEBOARDS_DIR;
 
     switch(parser.website)
     {

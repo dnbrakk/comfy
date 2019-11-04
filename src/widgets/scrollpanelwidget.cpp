@@ -28,27 +28,6 @@ ScrollPanelWidget::ScrollPanelWidget(bool _b_has_scrollbar, vector2d _offset, bo
 }
 
 
-void ScrollPanelWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
-{
-    if (_child_widget)
-    {
-        if (child_widget)
-        {
-            child_widget->set_parent_widget(nullptr);
-        }
-
-        _child_widget->set_parent_widget(this);
-        _child_widget->set_inherited_padding(child_padding);
-        child_widget = _child_widget;
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
 bool ScrollPanelWidget::handle_key_input(const tb_event& input_event, bool b_bubble_up)
 {
     bool b_handled = false;

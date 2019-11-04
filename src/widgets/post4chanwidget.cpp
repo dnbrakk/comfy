@@ -34,27 +34,6 @@ Post4chanWidget::Post4chanWidget(Thread4chanWidget* _thread, imageboard::post& _
 }
 
 
-void Post4chanWidget::set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild)
-{
-    if (_child_widget)
-    {
-        if (child_widget)
-        {
-            child_widget->set_parent_widget(nullptr);
-        }
-
-        _child_widget->set_parent_widget(this);
-        _child_widget->set_inherited_padding(child_padding);
-        child_widget = _child_widget;
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
 std::vector<ImageWidget*> Post4chanWidget::get_image_widgets()
 {
     std::vector<ImageWidget*> wgts;

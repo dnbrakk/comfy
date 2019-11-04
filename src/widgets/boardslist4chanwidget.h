@@ -31,8 +31,6 @@ public:
 
     static void open_board(std::string url);
 
-    void set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild);
-
     virtual bool handle_key_input(const tb_event& input_event, bool b_bubble_up = true) override;
     virtual void handle_term_resize_event() override;
     virtual void on_focus_received();

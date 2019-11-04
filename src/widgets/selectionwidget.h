@@ -51,9 +51,6 @@ public:
 
     void add_selection(std::string name, std::function<void()> fn);
 
-    void set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild = true);
-    std::shared_ptr<TermWidget> get_child_widget() { return child_widget; };
-
     virtual void rebuild(bool b_rebuild_children = true) override;
 
     virtual vector2d get_child_widget_size() const override;

@@ -11,7 +11,7 @@
 
 
 HorizontalBoxWidget::HorizontalBoxWidget(vector2d _offset, vector4d _padding, vector4d _child_padding)
-: TermWidget(_offset, _padding, _child_padding)
+: MultiChildWidget(_offset, _padding, _child_padding)
 {
     set_h_sizing(ws_fill);
 }
@@ -100,74 +100,6 @@ void HorizontalBoxWidget::rebuild(bool b_rebuild_children)
 }
 
 
-void HorizontalBoxWidget::add_child_widget(std::shared_ptr<TermWidget> child_widget, bool b_rebuild)
-{
-    if (child_widget)
-    {
-        if (child_widget->get_h_sizing() == ws_fullscreen ||
-            child_widget->get_h_sizing() == ws_fill)
-        {
-            child_widget->set_h_sizing(ws_fill_managed);
-        }
-
-        children.push_back(child_widget);
-        child_widget->set_parent_widget(this);
-        child_widget->update_size();
-
-        if (b_rebuild)
-        {
-            rebuild();
-        }
-    }
-}
-
-
-TermWidget* HorizontalBoxWidget::get_topmost_child_at(vector2d coord)
-{
-    // click within box
-    vector2d abs = get_absolute_offset();
-    vector2d dim = get_size();
-    if (abs.x <= coord.x && abs.y <= coord.y &&
-        abs.x + dim.x > coord.x && abs.y + dim.y > coord.y)
-    {
-        // click within child
-        for (auto& child : children)
-        {
-            if (child)
-            {
-                abs = child->get_absolute_offset();
-                dim = child->get_size();
-                if (abs.x <= coord.x && abs.y <= coord.y &&
-                    abs.x + dim.x > coord.x && abs.y + dim.y > coord.y)
-                {
-                    return child->get_topmost_child_at(coord);
-                }
-            }
-        }
-
-        return this;
-    }
-}
-
-
-void HorizontalBoxWidget::child_widget_size_change_event()
-{
-    rebuild(false);
-}
-
-
-void HorizontalBoxWidget::draw_children(vector4d constraint) const
-{
-    for (const auto& child : children)
-    {
-        if (child)
-        {
-            child->draw(constraint);
-        }
-    }
-}
-
-
 vector2d HorizontalBoxWidget::get_child_widget_size() const
 {
     vector2d out;
@@ -187,18 +119,6 @@ vector2d HorizontalBoxWidget::get_child_widget_size() const
     }
 
     return out;
-}
-
-
-void HorizontalBoxWidget::update_child_size(bool b_recursive)
-{
-    for (auto& child : children)
-    {
-        if (child)
-        {
-            child->update_size(b_recursive);
-        }
-    }
 }
 
 

@@ -48,9 +48,6 @@ public:
 
     virtual bool handle_key_input(const tb_event& input_event, bool b_bubble_up = true) override;
 
-    void set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild = true);
-    std::shared_ptr<TermWidget> get_child_widget() { return child_widget; };
-
     virtual void rebuild(bool b_rebuild_children = true) override;
     virtual void child_widget_size_change_event() override;
 
