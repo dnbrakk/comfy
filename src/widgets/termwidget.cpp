@@ -604,7 +604,7 @@ void TermWidget::draw_children(vector4d constraint) const
 {
     if (child_widget)
     {
-        child_widget->draw(constraint);
+        child_widget->draw(constraint, true);
     }
 }
 

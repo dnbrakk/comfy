@@ -33,7 +33,6 @@ void ColorBlockWidget::rebuild(bool b_rebuild_children)
     cells.clear();
 
     update_size();
-    ERR((int)bg_color, "COLO: ");
 
     for (int y = 0; y < size.y; ++y)
     {

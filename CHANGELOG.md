@@ -16,3 +16,7 @@ Notable changes to Comfy will be documented in this log.
 
 - Added logic to prevent a widget's child or sub-child widgets from being set as a widget's parent, and logic that prevents a widget's parent or super-parent from being set as a widget's child.
 
+### Fixed
+
+- 4chan boards list sometimes would not draw due to being hidden after passing focus to parent (homescreen widget).
+

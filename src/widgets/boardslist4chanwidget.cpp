@@ -101,6 +101,7 @@ void BoardsList4chanWidget::on_focus_received()
         if (p)
         {
             WIDGET_MAN.focus_widget(p);
+            show();
             return;
         }
         else

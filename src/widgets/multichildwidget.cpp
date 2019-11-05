@@ -78,7 +78,7 @@ void MultiChildWidget::draw_children(vector4d constraint) const
     {
         if (child)
         {
-            child->draw(constraint);
+            child->draw(constraint, true);
         }
     }
 }
