@@ -8,6 +8,7 @@
  */
 #pragma once
 #include "termwidget.h"
+#include <functional>
 
 class BoxWidget;
 class VerticalBoxWidget;
