@@ -20,11 +20,7 @@ void MultiChildWidget::add_child_widget(std::shared_ptr<TermWidget> child_widget
     // prevent parent widgets from being set as child widget
     if (child_widget && !is_child_of(child_widget.get()))
     {
-        if (child_widget->get_v_sizing() == ws_fullscreen ||
-            child_widget->get_v_sizing() == ws_fill)
-        {
-            child_widget->set_v_sizing(ws_fill_managed);
-        }
+        set_managed_sizing(child_widget);
 
         children.push_back(child_widget);
         child_widget->set_parent_widget(this);

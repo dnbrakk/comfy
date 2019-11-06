@@ -100,6 +100,18 @@ void VerticalBoxWidget::rebuild(bool b_rebuild_children)
 }
 
 
+void VerticalBoxWidget::set_managed_sizing(std::shared_ptr<TermWidget> wgt)
+{
+    if (!wgt) return;
+
+    if (wgt->get_v_sizing() == ws_fullscreen ||
+        wgt->get_v_sizing() == ws_fill)
+    {
+        wgt->set_v_sizing(ws_fill_managed);
+    }
+}
+
+
 vector2d VerticalBoxWidget::get_child_widget_size() const
 {
     vector2d out;

@@ -81,11 +81,17 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - Save images to arbitrary dir (e.g. by right-clicking the image).
 - Reduce thread box size in catalog when images are disabled.
 - Navigate catalog and open threads with keyboard only.
+- Use $XDG_CONFIG_HOME/comfy, $XDG_CACHE_HOME/comfy, and $XDG_DATA_HOME/comfy for storing config, cache, and static non-executable files, respectively, with $HOME used as a fallback.
+- ASCII (or similar) image display in text-only mode.
 - Color scheme chooser; load color schemes from disk.
 - 16 color color schemes for TTYs and terminal emulators that don't support 256 colors.
 - Copy URLs to clipboard on click.
+- Option to disable title animations.
+- Better key input system (Termbox's is rather limited, though very portable).
+- Key binding settings, plus ability to set them from a config file.
+- Vim keybindings.
 - Animate GIFs.
-- Options screen for setting various defaults (such as thread refresh interval).
+- Options screen/config file for setting various defaults (such as thread refresh interval).
 - Option to tick background widgets (so that e.g. threads can continue to auto refresh).
 - Option to show full screen images at actual resolution and allowing scrolling in the x and y axes (e.g. for viewing large infographs or screencaps).
 - Page loading indicator.
@@ -93,7 +99,10 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - Mark deleted threads as 404.
 - Posting from Comfy (might not be possible with 4chan due to the goolag captcha, but should be possible with other imageboards).
 - Video support, including youtube embedding? (Need to do some experimentation with ffmpeg)
+- Support for parsing Lynxchan.
 - Support for parsing other imageboards (feel free to email requests).
+- Support for parsing 4plebs archive.
+- Code syntax highlighting in code blocks.
 - Help screen.
 - Text search function for searching within focused thread or catalog.
 - Display images without requiring X (using the framebuffer directly)?
@@ -107,10 +116,11 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - Application will crash if images are enabled and Comfy is run by another user than the one that is logged into the X Session the terminal emulator is running in (e.g. if you switch users using 'su user' then run comfy).
 - Intense image flickering for a few seconds after resizing terminal window using the mouse (e.g. by dragging an edge or corner of the window). Really not sure what causes this.
 - Brief image flickering in some terminal emulators when scrolling catalog pages when the column width of threads displayed is greater than two.
+- Intermittent image flickering in st (stterm). This might be caused by footer redrawing in the tick event of catalog and thread widgets.
 - Images don't display in some terminal emulators running in X.
 - Crashes (eventually) when running in TTY with images enabled.
 - Scroll stuttering after scrolling the mouse wheel very quickly.
-- TextWidget string sanitization is inefficient and doesn't currently strip all HTML.
+- TextWidget string sanitization is inefficient and doesn't currently strip all HTML or convert most HTML entities to the proper chars.
 - When tofu (characters unsupported by terminal's font) gets displayed, it sometimes breaks the layout and/or leaves artifacts behind when scrolling (do a hard refresh by pressing F5 to get rid of the artifacts).
 
 ### Contributing

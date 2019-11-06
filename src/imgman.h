@@ -13,6 +13,12 @@
 // X11
 #include <X11/Xlib.h>
 
+/**
+ *   w3mimgdisplay's code was studied and adapted to
+ *   figure out how to draw images to the term window
+ *   using Imlib2 and X11.
+ */
+
 
 struct x11_info
 {

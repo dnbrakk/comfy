@@ -77,15 +77,14 @@ struct threadsafe_map
     }
 
     // returns true if the item was removed
-    // from the map, which occurs if this
-    // is there exist no other checkout_tokens
-    // for the key
+    // from the map, which occurs if there
+    // exist no other checkout_tokens for the key
     bool check_in(K& k)
     {
-        bool b_remove = false;
         {
             std::unique_lock<std::shared_mutex> lck(mtx);
 
+            bool b_remove = false;
             auto it = std::find(checked_out.begin(), checked_out.end(), k);
             if (it != checked_out.end())
             {
@@ -96,13 +95,12 @@ struct threadsafe_map
                     b_remove = true;
                 }
             }
-            // MUTEX destructs
-        }
 
-        if (b_remove)
-        {
-            map.erase(k);
-            return true;
+            if (b_remove)
+            {
+                map.erase(k);
+                return true;
+            }
         }
 
         return false;
@@ -340,9 +338,8 @@ struct threadsafe_list
 
 
     // returns true if the item was removed
-    // from the map, which occurs if this
-    // is there exist no other checkout_tokens
-    // for the key
+    // from the map, which occurs if there
+    // exist no other checkout_tokens for the key
     bool check_in(K& k)
     {
         {
