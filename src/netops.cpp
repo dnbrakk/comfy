@@ -32,10 +32,10 @@ void NetOps::shutdown()
  // get requests //
 //////////////////
 
-void NetOps::http_get__4chan_json(std::string url, bool b_steal_focus, long last_fetch_time, std::string job_pool_id, bool b_push_to_front)
+void NetOps::http_get__4chan_json(std::string url, std::string wgt_id, bool b_steal_focus, long last_fetch_time, std::string job_pool_id, bool b_push_to_front)
 {
     THREAD_MAN.enqueue_job(
-        std::bind(curl__get_4chan_json, url, last_fetch_time, b_steal_focus),
+        std::bind(curl__get_4chan_json, url, wgt_id, last_fetch_time, b_steal_focus),
         job_pool_id,
         b_push_to_front);
 }
@@ -57,9 +57,9 @@ void NetOps::http_get__image(http_image_req& req, std::string job_pool_id, bool 
  // curl launching //
 ////////////////////
 
-void NetOps::curl__get_4chan_json(std::string url, long last_fetch_time, bool b_steal_focus)
+void NetOps::curl__get_4chan_json(std::string url, std::string wgt_id, long last_fetch_time, bool b_steal_focus)
 {
-    data_4chan chan_data(url);
+    data_4chan chan_data(url, wgt_id);
     // error: invalid url
     if (!chan_data.url_is_valid())
     {

@@ -144,22 +144,30 @@ struct data_4chan : http_request
 {
     data_4chan()
     : http_request()
+    , wgt_id("")
     , b_steal_focus(false)
     {
         page_data = std::make_shared<imageboard::page_data>();
     }
 
-    data_4chan(std::string _url)
+    data_4chan(std::string _url, std::string _wgt_id = "")
     : http_request()
+    , wgt_id(_wgt_id)
     , b_steal_focus(false)
     {
         set_url(_url);
+        // widget id defaults to url
+        if (wgt_id.empty())
+        {
+            wgt_id = parser.url;
+        }
         page_data = std::make_shared<imageboard::page_data>();
         page_data->url = parser.url;
         page_data->board = parser.board;
     }
 
 
+    std::string wgt_id;
     std::shared_ptr<imageboard::page_data> page_data;
     bool b_steal_focus;
 
@@ -169,17 +177,19 @@ struct data_4chan : http_request
     {
         if (!page_data) return false;
 
-        if (parser.pagetype == pt_thread)
+        switch (parser.pagetype)
         {
-            return JSON_Utils::parse_4chan_thread(json, *page_data.get());
-        }
-        else if (parser.pagetype == pt_boards_list)
-        {
-            return JSON_Utils::parse_4chan_boards_list(json, *page_data.get());
-        }
-        else if (parser.pagetype == pt_board_catalog)
-        {
-            return JSON_Utils::parse_4chan_catalog(json, *page_data.get());
+            case pt_thread          :
+                return JSON_Utils::parse_4chan_thread(
+                    json, *page_data.get());
+
+            case pt_boards_list     :
+                return JSON_Utils::parse_4chan_boards_list(
+                    json, *page_data.get());
+
+            case pt_board_catalog   :
+                return JSON_Utils::parse_4chan_catalog(
+                    json, *page_data.get());
         }
 
         return false;
@@ -210,11 +220,11 @@ public:
     static threadsafe_queue<data_4chan> queue__4chan_json;
 
     // get requests
-    static void http_get__4chan_json(std::string url, bool b_steal_focus = false, long last_fetch_time = 0, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
+    static void http_get__4chan_json(std::string url, std::string wgt_id = "", bool b_steal_focus = false, long last_fetch_time = 0, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
     static void http_get__image(http_image_req& req, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
 
     // curl launching
-    static void curl__get_4chan_json(std::string url, long last_fetch_time, bool b_steal_focus);
+    static void curl__get_4chan_json(std::string url, std::string wgt_id, long last_fetch_time, bool b_steal_focus);
     static void curl__get_image(http_image_req req);
 
     // curl data processing

@@ -112,7 +112,7 @@ void load_urls(int argc, char* argv[])
         if (parser.pagetype == pt_board_catalog ||
             parser.pagetype == pt_thread)
         {
-            NetOps::http_get__4chan_json(s, true, 0);
+            NetOps::http_get__4chan_json(s, "", true, 0);
         }
     }
 }

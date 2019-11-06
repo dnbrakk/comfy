@@ -26,18 +26,20 @@ bool ChanWidget::update(data_4chan& chan_data)
     // error
     if (!chan_data.is_valid())
     {
-        std::string err = "Error: Thread failed to load.\n";
+        std::string err = "Error: chan_data invalid.\n";
 
         switch(chan_data.error_type)
         {
             case et_invalid_url         : err += "Invalid URL.\n";
                                           break;
+
             case et_http_404            : err += "404 not found.\n";
                                           break;
+
             case et_json_parse          : err += "JSON parse error.\n";
                                           break;
-            case et_not_mod_since       : err += "No new posts.\n";
-                                          break;
+
+            case et_not_mod_since       : return;
         }
 
         err += "CURL error code: " + std::to_string(chan_data.curl_result);

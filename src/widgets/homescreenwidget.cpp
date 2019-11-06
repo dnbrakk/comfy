@@ -14,7 +14,7 @@
 
 
 HomescreenWidget::HomescreenWidget(vector2d _offset, vector4d _padding, vector2d _size, uint32_t _bg_color, uint32_t _fg_color, bool _b_fullscreen)
-: TermWidget(_offset, _padding, vector4d(), _bg_color, _fg_color, true)
+: ChanWidget(_offset, _padding, vector4d(), _bg_color, _fg_color, true)
 {
     set_id("HOMESCREEN");
 
@@ -135,6 +135,19 @@ void HomescreenWidget::tick_event(std::chrono::milliseconds delta)
 }
 
 
+bool HomescreenWidget::update(data_4chan& chan_data)
+{
+    if (boards_list && chan_data.parser.pagetype == pt_boards_list)
+    {
+        bool b_redraw = boards_list->update(chan_data);
+        if (b_redraw)
+        {
+            WIDGET_MAN.draw_widgets(this);
+        }
+    }
+}
+
+
 void HomescreenWidget::show_4chan_boards_list(HomescreenWidget* hs)
 {
     if (!hs || !hs->get_content_box()) return;
@@ -144,14 +157,14 @@ void HomescreenWidget::show_4chan_boards_list(HomescreenWidget* hs)
     {
         data_4chan chan_data(url);
         hs->boards_list = std::make_shared<BoardsList4chanWidget>(chan_data);
-        WIDGET_MAN.add_widget(hs->boards_list, false /* b_focus */);
+        //WIDGET_MAN.add_widget(hs->boards_list, false /* b_focus */);
     }
 
     hs->get_content_box()->set_child_widget(hs->boards_list, false);
     hs->get_content_box()->rebuild(true);
     WIDGET_MAN.draw_widgets(hs);
 
-    NetOps::http_get__4chan_json(url);
+    NetOps::http_get__4chan_json(url, hs->get_id());
 }
 
 

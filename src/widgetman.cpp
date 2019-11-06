@@ -69,6 +69,7 @@ void WidgetMan::open_thread(std::string url, bool b_steal_focus)
     {
         NetOps::http_get__4chan_json(
             url,
+            "",
             b_steal_focus,
             0 /* last fetch time */,
             url /* job_pool_id */,
@@ -231,7 +232,7 @@ void WidgetMan::load_chan_data()
 
 void WidgetMan::load_4chan_data(data_4chan& chan_data)
 {
-    std::shared_ptr<TermWidget> wgt = get_widget(chan_data.parser.url);
+    std::shared_ptr<TermWidget> wgt = get_widget(chan_data.wgt_id);
     // widget exists, update it
     if (wgt)
     {
@@ -255,7 +256,9 @@ void WidgetMan::load_4chan_data(data_4chan& chan_data)
         }
     }
     // create new widget
-    else if (chan_data.is_valid())
+    // if chan_data.b_steal_focus is false, then the chan_data
+    // was intended to update a widget that no longer exists
+    else if (chan_data.is_valid() && chan_data.b_steal_focus)
     {
         if (chan_data.parser.pagetype == e_page_type::pt_thread)
         {
@@ -277,7 +280,7 @@ void WidgetMan::load_4chan_data(data_4chan& chan_data)
         }
     }
     // error
-    else
+    else if (!chan_data.is_valid() && chan_data.error_type != et_not_mod_since)
     {
         std::string err = "WIDGET_MAN ERROR: Page failed to load.\n";
         err += "URL: " + chan_data.parser.url + "\n";
@@ -289,8 +292,6 @@ void WidgetMan::load_4chan_data(data_4chan& chan_data)
             case et_http_404            : err += "404 not found.\n";
                                           break;
             case et_json_parse          : err += "JSON parse error.\n";
-                                          break;
-            case et_not_mod_since       : err += "No new posts.\n";
                                           break;
         }
 
@@ -693,6 +694,11 @@ bool WidgetMan::remove_widget(std::shared_ptr<TermWidget> widget)
 
 void WidgetMan::move_to_front(std::shared_ptr<TermWidget> widget, bool b_focus)
 {
+    if (widget_stack.back() == widget) return;
+
+    null_cells.clear();
+    artifact_remove.clear();
+
     remove_widget(widget);
     add_widget(widget, b_focus);
 }

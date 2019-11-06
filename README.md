@@ -2,6 +2,7 @@
 
 **Version:** 1.0.1
 
+**Dev chat on Matrix:** #comfy_dev:matrix.org
 [https://wolfish.neocities.org/soft/comfy/](https://wolfish.neocities.org/soft/comfy)
 
 Comfy is a console application for browsing imageboards. Comfy is written in C++, is multithreaded, supports displaying images, and is very /comfy/ to use.
@@ -86,6 +87,7 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - Color scheme chooser; load color schemes from disk.
 - 16 color color schemes for TTYs and terminal emulators that don't support 256 colors.
 - Copy URLs to clipboard on click.
+- Right-click post number link to open pop-up preview of post.
 - Option to disable title animations.
 - Better key input system (Termbox's is rather limited, though very portable).
 - Key binding settings, plus ability to set them from a config file.
@@ -122,6 +124,9 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - Scroll stuttering after scrolling the mouse wheel very quickly.
 - TextWidget string sanitization is inefficient and doesn't currently strip all HTML or convert most HTML entities to the proper chars.
 - When tofu (characters unsupported by terminal's font) gets displayed, it sometimes breaks the layout and/or leaves artifacts behind when scrolling (do a hard refresh by pressing F5 to get rid of the artifacts).
+- Image artifact remove cell sometimes appears at bottom right of switch widgets box.
+- Thread scroll position is sometimes changed when a new post is loaded after a reload.
+- Scrolling and other input is delayed/laggy when a catalog or thread is still loading images (as each image loaded causes the catalog or thread to rebuild).
 
 ### Contributing
 

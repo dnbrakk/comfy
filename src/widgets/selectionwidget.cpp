@@ -291,6 +291,21 @@ void SelectionWidget::rebuild(bool b_rebuild_children)
 }
 
 
+void SelectionWidget::set_selection(int set)
+{
+    if (set > selection_names.size() - 1)
+    {
+        set = selection_names.size() - 1;
+    }
+    else if (set < 0)
+    {
+        set = 0;
+    }
+
+    selection = set;
+}
+
+
 vector4d SelectionWidget::get_child_widget_padding() const
 {
     if (child_widget)

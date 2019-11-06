@@ -7,7 +7,7 @@
  *  Licensed under the GPL v2.0 only.
  */
 #pragma once
-#include "termwidget.h"
+#include "chanwidget.h"
 
 class BoxWidget;
 class VerticalBoxWidget;
@@ -16,7 +16,7 @@ class SelectionWidget;
 class BoardsList4chanWidget;
 
 
-class HomescreenWidget : public TermWidget
+class HomescreenWidget : public ChanWidget
 {
 
 public:
@@ -39,6 +39,7 @@ protected:
 
 public:
 
+    virtual bool update(data_4chan& chan_data) override;
     std::shared_ptr<BoardsList4chanWidget> boards_list;
 
     std::shared_ptr<BoxWidget> get_content_box() { return content_box; };

@@ -120,7 +120,14 @@ void Thread4chanWidget::tick_event(std::chrono::milliseconds delta)
         b_reload_flash_sym = true;
 
         // reload from url
-        NetOps::http_get__4chan_json(thread_url, last_update_time);
+        // note: reloads must always set steal focus to false
+        NetOps::http_get__4chan_json(
+            thread_url,
+            get_id(),
+            false,  // steal focus
+            last_update_time,
+            get_id());
+
         b_reloading = true;
     }
     // countdown timer
@@ -516,7 +523,13 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
             b_reloading = true;
             b_manual_update = true;
 
-            NetOps::http_get__4chan_json(thread_url, last_update_time);
+            // note: reloads must always set steal focus to false
+            NetOps::http_get__4chan_json(
+                thread_url,
+                get_id(),
+                false,  // steal focus
+                last_update_time,
+                get_id());
 
             WIDGET_MAN.draw_widgets();
         }

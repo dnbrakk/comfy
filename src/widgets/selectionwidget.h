@@ -43,6 +43,8 @@ protected:
 
 public:
 
+    int get_selection() const { return selection; };
+    void set_selection(int set);
     int get_num_selections() const { return selection_names.size(); };
     void set_draw_border(bool b_set) { b_draw_border = b_set; };
 

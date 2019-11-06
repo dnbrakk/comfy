@@ -22,6 +22,8 @@ BoardsList4chanWidget::BoardsList4chanWidget(data_4chan& chan_data)
     set_v_sizing(e_widget_sizing::ws_fill);
     b_ticks = false;
 
+    board_selections = nullptr;
+
     update(chan_data);
 }
 
@@ -34,7 +36,7 @@ void BoardsList4chanWidget::handle_term_resize_event()
 
 void BoardsList4chanWidget::open_board(std::string url)
 {
-    NetOps::http_get__4chan_json(url, true, 0);
+    NetOps::http_get__4chan_json(url, "", true, 0);
 }
 
 
@@ -62,6 +64,12 @@ void BoardsList4chanWidget::rebuild(bool b_rebuild_children)
 {
     if (!page_data) return;
 
+    int set = 0;
+    if (board_selections)
+    {
+        set = board_selections->get_selection();
+    }
+
     board_selections = std::make_shared<SelectionWidget>();
     board_selections->set_draw_border(false);
 
@@ -82,6 +90,7 @@ void BoardsList4chanWidget::rebuild(bool b_rebuild_children)
             sel, std::bind(open_board, board_url));
     }
 
+    board_selections->set_selection(set);
     set_child_widget(board_selections, false /* rebuild */);
     board_selections->rebuild(true /* recursive */);
 
