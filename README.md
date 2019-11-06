@@ -104,7 +104,7 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - Video support, including youtube embedding? (Need to do some experimentation with ffmpeg)
 - Support for parsing Lynxchan.
 - Support for parsing other imageboards (feel free to email requests).
-- Support for parsing 4plebs archive.
+- Support for parsing 4plebs archives.
 - Code syntax highlighting in code blocks.
 - Help screen.
 - Text search function for searching within focused thread or catalog.
