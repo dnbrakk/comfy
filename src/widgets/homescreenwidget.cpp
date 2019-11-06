@@ -139,12 +139,10 @@ bool HomescreenWidget::update(data_4chan& chan_data)
 {
     if (boards_list && chan_data.parser.pagetype == pt_boards_list)
     {
-        bool b_redraw = boards_list->update(chan_data);
-        if (b_redraw)
-        {
-            WIDGET_MAN.draw_widgets(this);
-        }
+        return boards_list->update(chan_data);
     }
+
+    return false;
 }
 
 
