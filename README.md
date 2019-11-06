@@ -2,8 +2,9 @@
 
 **Version:** 1.0.1
 
-**Dev chat on Matrix:** #comfy_dev:matrix.org
 [https://wolfish.neocities.org/soft/comfy/](https://wolfish.neocities.org/soft/comfy)
+
+**Dev chat on Matrix:** #comfy_dev:matrix.org
 
 Comfy is a console application for browsing imageboards. Comfy is written in C++, is multithreaded, supports displaying images, and is very /comfy/ to use.
 
