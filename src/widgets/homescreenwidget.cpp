@@ -155,7 +155,6 @@ void HomescreenWidget::show_4chan_boards_list(HomescreenWidget* hs)
     {
         data_4chan chan_data(url);
         hs->boards_list = std::make_shared<BoardsList4chanWidget>(chan_data);
-        //WIDGET_MAN.add_widget(hs->boards_list, false /* b_focus */);
     }
 
     hs->get_content_box()->set_child_widget(hs->boards_list, false);

@@ -91,6 +91,11 @@ namespace Colors
 
     // good color cheat sheet here:
     // https://jonasjacek.github.io/colors/
+    //
+    // note: avoid using colors 0 - 15, as many
+    //       term emulators will set custom colors
+    //       to those values (e.g. 0 will be white
+    //       instead of black)
 
     static const color_scheme COMFYBLUE
     {
