@@ -12,7 +12,6 @@
 #include "netops.h"
 #include "imgman.h"
 #include "widgets/widgets.h"
-//#include <thread>
 
 
 void WidgetMan::init()

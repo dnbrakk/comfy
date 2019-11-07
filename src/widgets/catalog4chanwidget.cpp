@@ -21,6 +21,7 @@ Catalog4chanWidget::Catalog4chanWidget(data_4chan& chan_data, bool b_update)
     auto_refresh_interval = std::chrono::milliseconds(auto_ref_s * 1000);
     selected_thread = nullptr;
     b_can_save = false;
+    b_can_post_to = false;
 
     title = "/" + board + "/ - Catalog";
 

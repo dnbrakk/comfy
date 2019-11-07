@@ -8,6 +8,7 @@
  */
 #pragma once
 #include "comfy.h"
+#include "threadman.h"
 
 class TermWidget;
 class TextWidget;

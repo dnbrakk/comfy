@@ -858,6 +858,18 @@ struct term_word
 };
 
 
+struct user_input
+{
+    user_input()
+    : ch(-1)
+    , input_event(tb_event())
+    {}
+
+    uint32_t ch;
+    tb_event input_event;
+};
+
+
 // Error output
 
 static inline void ERR(std::string out, std::string label = "")

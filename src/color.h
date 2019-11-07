@@ -66,6 +66,10 @@ namespace Colors
         uint8_t post_reply;         // e.g. ">>423423777"
         uint8_t post_greentext;     // e.g. ">foo bar baz"
 
+        // new post dialog
+        uint8_t new_post_bg;
+        uint8_t new_post_fg;
+
         uint8_t selection_bg;
         uint8_t selection_fg;
 
@@ -91,6 +95,11 @@ namespace Colors
 
     // good color cheat sheet here:
     // https://jonasjacek.github.io/colors/
+    //
+    // note: avoid using colors 0 - 15, as many
+    //       term emulators will set custom colors
+    //       to those values (e.g. 0 will be white
+    //       instead of black)
 
     static const color_scheme COMFYBLUE
     {
@@ -137,6 +146,9 @@ namespace Colors
         post_img_info:          255,
         post_reply:             255,
         post_greentext:         47,
+
+        new_post_bg:            17,
+        new_post_fg:            87,
 
         selection_bg:           17,
         selection_fg:           87,

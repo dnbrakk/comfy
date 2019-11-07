@@ -58,6 +58,7 @@ protected:
 
     bool b_reloading;
     bool b_can_save;
+    bool b_can_post_to;
 
     Post4chanWidget* selected_post;
     std::wstring footer_countdown;

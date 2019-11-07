@@ -45,6 +45,7 @@ Thread4chanWidget::Thread4chanWidget(data_4chan& chan_data, bool b_update)
     b_auto_update = false;
     b_manual_update = false;
     b_can_save = true;
+    b_can_post_to = true;
 
     if (b_update)
     {
@@ -605,6 +606,27 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
         THREAD_MAN.kill_jobs(get_id());
         delete_self();
         return true;
+    }
+    // make new post
+    else if (input_event.key == TB_KEY_CTRL_P &&
+             b_can_post_to && !b_archived)
+    {
+        auto np_id = thread_url;
+        np_id += "_NEW_POST";
+        auto existing_wgt = WIDGET_MAN.get_widget(np_id);
+        if (existing_wgt)
+        {
+            existing_wgt->rebuild();
+            WIDGET_MAN.move_to_front(existing_wgt, true /* focus */);
+        }
+        else
+        {
+            auto new_post = std::make_shared<NewPostWidget>();
+            new_post->set_id(np_id);
+            WIDGET_MAN.add_widget(new_post, true /* focus */);
+        }
+
+        b_handled = true;
     }
 
     if (!b_handled)

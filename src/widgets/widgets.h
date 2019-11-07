@@ -28,4 +28,5 @@
 #include "wrapgrid.h"
 #include "homescreenwidget.h"
 #include "multichildwidget.h"
+#include "newpostwidget.h"
 
