@@ -65,6 +65,8 @@ ImgMan::init()
 
 void ImgMan::shutdown()
 {
+    if (!DISPLAY_IMAGES) return;
+
     clear_buffer();
 
     for (const auto& img_d : img_cache_map.map)
@@ -145,6 +147,8 @@ ImgMan::img_data::~img_data()
 
 void ImgMan::free_pixmap(Pixmap pixmap)
 {
+    if (!DISPLAY_IMAGES) return;
+
     xi.free_pixmap(pixmap);
 }
 

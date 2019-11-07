@@ -304,6 +304,8 @@ void WidgetMan::load_4chan_data(data_4chan& chan_data)
 
 void WidgetMan::load_image_data()
 {
+    if (!DISPLAY_IMAGES) return;
+
     bool b_redraw = false;
     std::set<TermWidget*> wgts;
 

@@ -18,19 +18,22 @@ ImageWidget::ImageWidget(img_packet& _img_pac, bool _b_maintain_ar, bool _b_full
 , b_fullscreen_on_click(_b_fullscreen_on_click)
 , original_size(_size)
 {
-    // ensure that img_data for this image persists for the
-    // lifetime of this widget, and when this widget destructs,
-    // if this is the last checkout_token for the img_data that
-    // exists, the img_data is removed from the map and the
-    // associated data garbage collected
-    img_token = IMG_MAN.checkout_img(img_pac.image_key);
+    if (DISPLAY_IMAGES)
+    {
+        // ensure that img_data for this image persists for the
+        // lifetime of this widget, and when this widget destructs,
+        // if this is the last checkout_token for the img_data that
+        // exists, the img_data is removed from the map and the
+        // associated data garbage collected
+        img_token = IMG_MAN.checkout_img(img_pac.image_key);
 
-    set_size(_size);
-    set_h_sizing(e_widget_sizing::ws_fill);
-    set_v_sizing(e_widget_sizing::ws_fill);
-    img_size_pix = IMG_MAN.get_img_size(img_pac.image_key);
-    last_size_drawn = vector2d(-1);
-    last_offset_drawn = vector2d(-1);
+        set_size(_size);
+        set_h_sizing(e_widget_sizing::ws_fill);
+        set_v_sizing(e_widget_sizing::ws_fill);
+        img_size_pix = IMG_MAN.get_img_size(img_pac.image_key);
+        last_size_drawn = vector2d(-1);
+        last_offset_drawn = vector2d(-1);
+    }
 }
 
 
@@ -41,6 +44,8 @@ ImageWidget::~ImageWidget()
 
 void ImageWidget::rebuild(bool b_rebuild_children)
 {
+    if (!DISPLAY_IMAGES) return;
+
     int w = get_width_constraint();
     int h = get_height_constraint();
 

@@ -82,7 +82,7 @@ struct x11_info
 
     void init()
     {
-        if (b_init) return;
+        if (!DISPLAY_IMAGES || b_init) return;
 
         // these are initialized to 2 for some reason
         offset_x = 2;
@@ -340,8 +340,8 @@ public:
 
     static ImgMan& get_instance()
     {
-        static ImgMan sixel;
-        return sixel;
+        static ImgMan img_man;
+        return img_man;
     }
 
     init();

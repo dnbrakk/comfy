@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
     // shutdown
     THREAD_MAN.shutdown();
     NetOps::shutdown();
-    IMG_MAN.shutdown();
+    if (DISPLAY_IMAGES)IMG_MAN.shutdown();
     clean_up_files();
 
     return 0;

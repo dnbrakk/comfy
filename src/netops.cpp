@@ -157,6 +157,8 @@ void NetOps::curl__get_4chan_json(std::string url, std::string wgt_id, long last
 
 void NetOps::curl__get_image(http_image_req req)
 {
+    if (!DISPLAY_IMAGES) return;
+
     // error: invalid url
     if (!req.url_is_valid())
     {
