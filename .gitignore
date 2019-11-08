@@ -3,4 +3,5 @@ comfy
 ecom.sh
 *.swp
 session.vim
+compile_commands.json
 

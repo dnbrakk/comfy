@@ -145,6 +145,7 @@ void WidgetMan::run()
         std::chrono::microseconds delta = now - last_tick_time;
         last_tick_time = now;
 
+        GoogleCaptcha::get_4chan_instance().tick();
         tick_widgets();
 
         int e_type = tb_peek_event(&input_event, 10 /* timeout in ms */);
@@ -348,7 +349,7 @@ void WidgetMan::load_image_data()
 }
 
 
-std::shared_ptr<TermWidget> WidgetMan::get_widget(std::string key)
+std::shared_ptr<TermWidget> WidgetMan::get_widget(const std::string& key) const
 {
     for (auto& w : widget_stack)
     {
