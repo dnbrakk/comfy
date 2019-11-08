@@ -79,6 +79,8 @@ namespace HTML_Utils
 
         bool is_valid() const
         {
+            // TODO: additional validity requirements.
+            //       or set url to empty when parse fails
             return !url.empty(); 
         }
 

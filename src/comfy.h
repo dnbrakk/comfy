@@ -16,6 +16,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <experimental/optional>
 #include <chrono>
 #include <codecvt>
 #include <locale> 
@@ -797,7 +798,7 @@ struct term_word
     {}
 
     term_word(
-        std::wstring _text,
+        const std::wstring& _text,
         uint32_t _bg,
         uint32_t _fg,
         bool _b_bold = false,

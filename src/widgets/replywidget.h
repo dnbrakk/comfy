@@ -14,12 +14,12 @@ class ScrollPanelWidget;
 class TextWidget;
 
 
-class NewPostWidget : public TermWidget
+class ReplyWidget : public TermWidget
 {
 
 public:
 
-    NewPostWidget(vector2d _offset = vector2d(), vector4d _padding = vector4d(), vector2d _size = vector2d(), uint32_t _bg_color = 0, uint32_t _fg_color = 15, bool _b_fullscreen = false);
+    ReplyWidget(vector2d _offset = vector2d(), vector4d _padding = vector4d(), vector2d _size = vector2d(), uint32_t _bg_color = 0, uint32_t _fg_color = 15, bool _b_fullscreen = false);
 
 
 protected:
@@ -30,9 +30,13 @@ protected:
     std::wstring post_text_buf;
     int cursor_pos;
 
+    void submit_reply();
+
 
 public:
 
+    std::wstring& get_text_buffer() { return post_text_buf; };
+    virtual void update_cursor_coord() override;
     virtual void rebuild(bool b_rebuild_children = true) override;
     virtual void child_widget_size_change_event() override;
 
@@ -41,6 +45,7 @@ public:
     virtual void update_child_size(bool b_recursive = false) override;
 
     virtual bool handle_key_input(const tb_event& input_event, bool b_bubble_up = true) override;
+    virtual void receive_left_click(vector2d coord, TermWidget* clicked = nullptr, TermWidget* source = nullptr) override;
 
 };
 

@@ -302,42 +302,17 @@ void TextWidget::parse_4chan(std::vector<term_word>& words)
 
 void TextWidget::append_char(wchar_t ch, bool b_rebuild, int index, bool b_bold, bool b_underline, bool b_reverse, uint32_t bg, uint32_t fg)
 {
-    if (bg == -1)
-        bg = bg_color;
-
-    if (fg == -1)
-        fg = fg_color;
-
-    if (ch == L'\n')
+    if (wcscmp(ch, wchar_t("\n") == 0))
     {
+        ERR("NEWLINE DETECTED");
         term_word nl_w = term_word::newline();
-        nl_w.bg = bg;
-        nl_w.fg = fg;
         term_words.push_back(nl_w);
     }
     else
     //else if (index == -1)
     {
-        term_word* word = nullptr;
-        if (term_words.size() > 0)
-        {
-            auto& end_word = term_words.back();
-            if (!end_word.b_newline)
-            {
-                word = &end_word;
-            }
-        }
-
-        if (word)
-        {
-            word->text.append(1, ch);
-        }
-        else
-        {
-            std::wstring w = std::wstring(1, ch);
-            term_words.emplace_back(
-                w, bg, fg, b_bold, b_underline, b_reverse);
-        }
+        term_word& word = term_words.back();
+        word.text += ch;
     }
     //else
     //{
@@ -367,7 +342,7 @@ void TextWidget::remove_char(int index, bool b_rebuild)
         {
             if (word.text.length() > 1)
             {
-                word.text = word.text.substr(0);
+                word.text = word.text.substr(1);
             }
             else
             {
@@ -380,16 +355,9 @@ void TextWidget::remove_char(int index, bool b_rebuild)
             if (curr_index + word.text.length() >= index)
             {
                 int d_index = index - curr_index;
-                if (d_index + 1 < word.text.length())
-                {
-                    word.text =
-                        word.text.substr(0, d_index) +
-                        word.text.substr(d_index + 1);
-                }
-                else
-                {
-                    word.text = word.text.substr(0, d_index);
-                }
+                word.text =
+                    word.text.substr(0, d_index) +
+                    word.text.substr(d_index + 1);
                 break;
             }
             else
@@ -441,9 +409,6 @@ void TextWidget::append_text(const std::vector<term_word>& words)
 
 void TextWidget::append_text(const std::wstring& str, bool b_rebuild, bool b_bold, bool b_underline, bool b_reverse, uint32_t bg, uint32_t fg)
 {
-    if (str.empty())
-        return;
-
     std::wstring s = str;
     sanitize_text(s);
 

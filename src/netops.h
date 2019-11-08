@@ -76,14 +76,14 @@ struct http_image_req : http_request
     {}
 
     http_image_req(
-        std::string url,
+        const std::string& url,
         vector2d _size,
-        std::string _thread_key,
-        std::string thread_num_str,
+        const std::string& _thread_key,
+        const std::string& thread_num_str,
         int _post_key,
         // file path and file name can be overridden
-        std::string _custom_file_path = "",
-        std::string _custom_file_name = ""
+        const std::string& _custom_file_path = "",
+        const std::string& _custom_file_name = ""
     )
     : size(_size)
     , thread_key(_thread_key)
@@ -212,8 +212,6 @@ class NetOps
 {
 
 public:
-    using RequestGoogleCaptchaCallback = std::function<void(std::optional<GoogleCaptchaChallenge>)>;
-    using SubmitGoogleCaptchaSolutionCallback = std::function<void(std::optional<std::string>)>;
 
     static void init();
     static void shutdown();

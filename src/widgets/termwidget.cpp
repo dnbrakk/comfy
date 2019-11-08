@@ -40,6 +40,8 @@ TermWidget::TermWidget(vector2d _offset, vector4d _padding, vector4d _child_padd
 
     set_can_switch_to(true);
     set_draw_img_buffer(true);
+    set_draw_cursor(false);
+    cursor_coord = vector2d(TB_HIDE_CURSOR);
     set_remove_img_artifacts_on_draw(false);
     set_take_draw_control(true);
 }

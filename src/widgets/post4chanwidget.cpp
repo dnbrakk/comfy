@@ -82,7 +82,7 @@ void Post4chanWidget::rebuild(bool b_rebuild_children)
                 vector4d(0, 0, 0, 0),           // padding
                 vector2d(1, 1),                 // size
                 COLO.post_info_bg,              // bg_color
-                COLO.post_info_bg);             // fg_color
+                COLO.post_info_bg);             // fg_coloN
         post_info_box->set_child_padding(vector4d());
         post_info_box->set_h_sizing(e_widget_sizing::ws_fill);
         post_info_box->set_v_sizing(e_widget_sizing::ws_auto);

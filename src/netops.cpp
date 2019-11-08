@@ -62,14 +62,14 @@ static bool google_captcha_response_extract_goal_description(const std::string& 
     return true;
 }
 
-static std::optional<GoogleCaptchaChallengeInfo> google_captcha_parse_request_challenge_response(const std::string& api_key, const std::string& html_source)
+static std::experimental::optional<GoogleCaptchaChallengeInfo> google_captcha_parse_request_challenge_response(const std::string& api_key, const std::string& html_source)
 {
     GoogleCaptchaChallengeInfo result;
     if(!google_captcha_response_extract_id(html_source, result.id))
-        return std::nullopt;
+        return std::experimental::nullopt;
     result.payload_url = "https://www.google.com/recaptcha/api2/payload?c=" + result.id + "&k=" + api_key;
     if(!google_captcha_response_extract_goal_description(html_source, result.description))
-        return std::nullopt;
+        return std::experimental::nullopt;
     return result;
 }
 
@@ -97,16 +97,16 @@ static std::string strip_html_tags(const std::string& text)
     return result;
 }
 
-static std::optional<std::string> google_captcha_parse_submit_solution_response(const std::string& html_source)
+static std::experimental::optional<std::string> google_captcha_parse_submit_solution_response(const std::string& html_source)
 {
     size_t start_index = html_source.find("\"fbc-verification-token\">");
     if(start_index == std::string::npos)
-        return std::nullopt;
+        return std::experimental::nullopt;
 
     start_index += 25;
     size_t end_index = html_source.find("</", start_index);
     if(end_index == std::string::npos)
-        return std::nullopt;
+        return std::experimental::nullopt;
 
     return strip_html_tags(html_source.substr(start_index, end_index - start_index));
 }
@@ -348,13 +348,13 @@ void NetOps::curl__get_google_captcha(std::string api_key, std::string referer, 
     curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &code);
     fprintf(stderr, "curl__get_google_captcha, response code %ld, success: %s\n", code, success == CURLE_OK ? "yes" : "no");
     if (code == 404)
-        callback(std::nullopt);
+        callback(std::experimental::nullopt);
     else if (success == CURLE_OK)
     {
-        std::optional<GoogleCaptchaChallengeInfo> captcha_info = google_captcha_parse_request_challenge_response(api_key, out_buf.str());
+        std::experimental::optional<GoogleCaptchaChallengeInfo> captcha_info = google_captcha_parse_request_challenge_response(api_key, out_buf.str());
         if (!captcha_info)
         {
-            callback(std::nullopt);
+            callback(std::experimental::nullopt);
         }
         else
         {
@@ -388,7 +388,7 @@ void NetOps::curl__get_google_captcha(std::string api_key, std::string referer, 
             }
             else
             {
-                callback(std::nullopt);
+                callback(std::experimental::nullopt);
             }
         }
     }
@@ -423,13 +423,13 @@ void NetOps::curl__post_google_captcha_solution(std::string api_key, std::string
     curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &code);
     fprintf(stderr, "curl__post_google_captcha_solution, response code %ld, success: %s\n", code, success == CURLE_OK ? "yes" : "no");
     if (code == 404)
-        callback(std::nullopt);
+        callback(std::experimental::nullopt);
     else if (success == CURLE_OK)
     {
-        std::optional<std::string> solved_captcha_id = google_captcha_parse_submit_solution_response(out_buf.str());
+        std::experimental::optional<std::string> solved_captcha_id = google_captcha_parse_submit_solution_response(out_buf.str());
         if (!solved_captcha_id)
         {
-            callback(std::nullopt);
+            callback(std::experimental::nullopt);
         }
         else
         {

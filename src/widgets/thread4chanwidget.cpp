@@ -607,7 +607,7 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
         delete_self();
         return true;
     }
-    // make new post
+    // make reply
     else if (input_event.key == TB_KEY_CTRL_P &&
              b_can_post_to && !b_archived)
     {
@@ -621,9 +621,11 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
         }
         else
         {
-            auto new_post = std::make_shared<NewPostWidget>();
-            new_post->set_id(np_id);
-            WIDGET_MAN.add_widget(new_post, true /* focus */);
+            auto reply = std::make_shared<ReplyWidget>();
+            reply->set_id(np_id);
+            std::string reply_title = "Reply to thread: " + title;
+            reply->set_title(reply_title);
+            WIDGET_MAN.add_widget(reply, true /* focus */);
         }
 
         b_handled = true;

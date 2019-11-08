@@ -184,7 +184,7 @@ void GoogleCaptcha::request_state(Delegate* delegate)
     }
 }
 
-void GoogleCaptcha::on_receive_new_challenge(std::optional<GoogleCaptchaChallenge> _challenge)
+void GoogleCaptcha::on_receive_new_challenge(std::experimental::optional<GoogleCaptchaChallenge> _challenge)
 {
     std::lock_guard<std::mutex> lock(challenge_update_mutex);
     if(_challenge)
@@ -202,7 +202,7 @@ void GoogleCaptcha::on_receive_new_challenge(std::optional<GoogleCaptchaChalleng
     }
 }
 
-void GoogleCaptcha::on_receive_solution_response(std::optional<std::string> _solved_captcha_id)
+void GoogleCaptcha::on_receive_solution_response(std::experimental::optional<std::string> _solved_captcha_id)
 {
     std::lock_guard<std::mutex> lock(challenge_update_mutex);
     if(_solved_captcha_id)

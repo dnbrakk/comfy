@@ -24,6 +24,8 @@ protected:
     bool b_parse_4chan;
     int widest_row;
     int cell_index;
+    // used by append_char()
+    int consecutive_space_count;
     std::map<int, term_word> format_override;
 
     // returns true if max height has been reached
@@ -60,6 +62,24 @@ public:
     static int parse_post_num_quote(const std::wstring& s);
 
     void append_text(const std::vector<term_word>& words);
+
+    // individual chars
+
+    // index of -1 appends to end of last word
+    // if appending to an existing word, the color and style
+    // is the same as that word
+    void append_char(
+        wchar_t ch,
+        bool b_rebuild = false,
+        int index = -1,
+        bool b_bold = false,
+        bool b_underline = false,
+        bool b_reverse = false,
+        uint32_t bg = -1,
+        uint32_t fg = -1
+    );
+
+    void remove_char(int index, bool b_rebuild = false);
 
     // sanitized and parsed text
 
@@ -125,7 +145,14 @@ public:
         uint32_t fg = -1
     );
 
-    std::wstring get_word_at_coord(vector2d coord);
+    std::wstring get_word_at_coord(vector2d coord) const;
+    // index in text string at term coord
+    // if y > num rows, y = num rows
+    // if x > width of row, x = width of row
+    // returns -1 if given invalid coords
+    int get_index_at_coord(vector2d coord) const;
+    // coord in term of index in text string
+    vector2d get_coord_of_index(int index) const;
 
     void clear_text() { term_words.clear(); widest_row = 0; };
 

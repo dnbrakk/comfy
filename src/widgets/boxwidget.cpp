@@ -93,7 +93,7 @@ void BoxWidget::rebuild(bool b_rebuild_children)
             tb_utf8_char_to_unicode(&unicode_char, " ");
             cell.ch = unicode_char;
             cell.bg = bg_color;
-            cell.fg = bg_color;
+            cell.fg = fg_color;
             row.push_back(cell);
         }
 

@@ -8,6 +8,7 @@
  */
 #pragma once
 
+#include "comfy.h"
 #include "imgman.h"
 #include <functional>
 
@@ -17,6 +18,9 @@ struct GoogleCaptchaChallenge
     std::string description;
     img_packet image;
 };
+
+using RequestGoogleCaptchaCallback = std::function<void(std::experimental::optional<GoogleCaptchaChallenge>)>;
+using SubmitGoogleCaptchaSolutionCallback = std::function<void(std::experimental::optional<std::string>)>;
 
 // Google captcha is a 3x3 grid, so the column is a value between [0, 2]
 // and the row is a value between [0, 2].
@@ -82,8 +86,8 @@ private:
     };
 
     GoogleCaptcha(const std::string& _api_key, const std::string& _referer);
-    void on_receive_new_challenge(std::optional<GoogleCaptchaChallenge> _challenge);
-    void on_receive_solution_response(std::optional<std::string> _solved_captcha_id);
+    void on_receive_new_challenge(std::experimental::optional<GoogleCaptchaChallenge> _challenge);
+    void on_receive_solution_response(std::experimental::optional<std::string> _solved_captcha_id);
     GoogleCaptchaChallenge get_captcha_challenge();
     std::string get_solved_captcha_id();
 

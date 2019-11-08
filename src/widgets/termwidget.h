@@ -93,6 +93,10 @@ protected:
     // the image buffer while this widget is focused
     bool b_draw_img_buffer;
 
+    // whether or not to draw the cursor
+    bool b_draw_cursor;
+    vector2d cursor_coord;
+
     // optionally blast out image artifacts
     // where widget will be drawn
     bool b_remove_img_artifacts_on_draw;
@@ -111,8 +115,9 @@ public:
     virtual void set_child_widget(std::shared_ptr<TermWidget> _child_widget, bool b_rebuild = true);
     std::shared_ptr<TermWidget> get_child_widget() { return child_widget; };
 
-    void set_id(std::string _id) { id = _id; };
+    void set_id(const std::string& _id) { id = _id; };
     std::string get_id() const { return id; };
+    void set_title(const std::string& _title) { title = _title; };
     virtual std::string get_title() const;
 
     // returns true if this widget is child or sub-child of wgt,
@@ -128,6 +133,11 @@ public:
 
     bool can_switch_to() const { return b_can_switch_to; };
     void set_can_switch_to(bool b_set) { b_can_switch_to = b_set; };
+
+    bool should_draw_cursor() const { return b_draw_cursor; };
+    void set_draw_cursor(bool b_set) { b_draw_cursor = b_set; };
+    virtual void update_cursor_coord() {};
+    vector2d get_cursor_coord() const { return cursor_coord; };
 
     bool should_draw_img_buffer() const { return b_draw_img_buffer; };
     void set_draw_img_buffer(bool b_set) { b_draw_img_buffer = b_set; };

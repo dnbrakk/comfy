@@ -512,26 +512,16 @@ void WidgetMan::remove_image_artifact(vector2d coord)
 
 void WidgetMan::draw_widgets(TermWidget* draw_widget, bool b_clear_cells, bool b_clear_images)
 {
+    TermWidget* wgt = draw_widget;
+    if (!wgt)
+        wgt = focused_widget.get();
+
     // a widget can take control of drawing widgets, preventing
     // other widgets from calling draw_widgets()
     // if draw_conttroller == nullptr, any widget can cann draw_widgets()
-    if (draw_controller &&
-        draw_widget != draw_controller &&
-        focused_widget.get() != draw_controller)
-    {
-        bool b_parent_is_controller = false;
-        if (draw_widget)
-        {
-            // if widget is child or sub-child of draw_controller,
-            // then allow widget to draw
-            b_parent_is_controller = draw_widget->is_child_of(draw_controller);
-        }
-
-        if (!b_parent_is_controller)
-        {
-            return;
-        }
-    }
+    if (!wgt || (draw_controller && wgt != draw_controller &&
+         !wgt->is_child_of(draw_controller)))
+        return;
 
     // wipe terminal screen, including images
     if (b_clear_cells)
@@ -549,20 +539,7 @@ void WidgetMan::draw_widgets(TermWidget* draw_widget, bool b_clear_cells, bool b
     }
 
     // termbox_frame and null cells are populated by draw()
-    if (draw_widget)
-    {
-        draw_widget->draw();
-    }
-    else if (focused_widget)
-    {
-        focused_widget->draw();
-    }
-    // nothing to draw
-    else
-    {
-        termbox_draw();
-        return;
-    }
+    wgt->draw();
 
     // remove image artifacts
     if (artifact_remove.size() > 0)
@@ -585,6 +562,7 @@ void WidgetMan::draw_widgets(TermWidget* draw_widget, bool b_clear_cells, bool b
         termbox_draw();
         termbox_frame = frame_buf;
         artifact_remove.clear();
+        // DEBUG:
         //std::this_thread::sleep_for(std::chrono::seconds(3));
     }
 
@@ -601,6 +579,18 @@ void WidgetMan::draw_widgets(TermWidget* draw_widget, bool b_clear_cells, bool b
         {
             IMG_MAN.redraw_buffer();
         }
+    }
+
+    // draw cursor
+    if (wgt->should_draw_cursor())
+    {
+        wgt->update_cursor_coord();
+        vector2d coord = wgt->get_cursor_coord();
+        tb_set_cursor(coord.x, coord.y);
+    }
+    else
+    {
+        tb_set_cursor(TB_HIDE_CURSOR, TB_HIDE_CURSOR);
     }
 
     termbox_draw();
