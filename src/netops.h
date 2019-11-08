@@ -9,6 +9,7 @@
 #pragma once
 #include "comfy.h"
 #include "threadman.h"
+#include "googlecaptcha.h"
 #include <curl/curl.h>
 
 using namespace HTML_Utils;
@@ -207,11 +208,12 @@ struct data_4chan : http_request
     }
 };
 
-
 class NetOps
 {
 
 public:
+    using RequestGoogleCaptchaCallback = std::function<void(std::optional<GoogleCaptchaChallenge>)>;
+    using SubmitGoogleCaptchaSolutionCallback = std::function<void(std::optional<std::string>)>;
 
     static void init();
     static void shutdown();
@@ -222,10 +224,21 @@ public:
     // get requests
     static void http_get__4chan_json(std::string url, std::string wgt_id = "", bool b_steal_focus = false, long last_fetch_time = 0, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
     static void http_get__image(http_image_req& req, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
+    // The referer is the domain where the request came from. For example for 4chan it's "https://boards.4chan.org/".
+    // |callback| can't be null
+    static void http_get__google_captcha(const std::string& api_key, const std::string& referer, RequestGoogleCaptchaCallback callback, const std::string& job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
+
+    // post requests
+    // |callback| can't be null
+    static void http_post__google_captcha_solution(const std::string& api_key, const std::string& captcha_id, GoogleCaptchaSolution solution, SubmitGoogleCaptchaSolutionCallback callback, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = true);
 
     // curl launching
     static void curl__get_4chan_json(std::string url, std::string wgt_id, long last_fetch_time, bool b_steal_focus);
-    static void curl__get_image(http_image_req req);
+    static void curl__get_image(http_image_req& req);
+    // |callback| can't be null
+    static void curl__get_google_captcha(std::string api_key, std::string referer, RequestGoogleCaptchaCallback callback);
+    // |callback| can't be null
+    static void curl__post_google_captcha_solution(std::string api_key, std::string captcha_id, GoogleCaptchaSolution solution, SubmitGoogleCaptchaSolutionCallback callback);
 
     // curl data processing
     static size_t curl_write_data(char* buffer, size_t size, size_t nmemb, void* out); 

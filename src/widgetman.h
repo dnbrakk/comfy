@@ -143,7 +143,7 @@ public:
 
     void handle_term_resize_event(const tb_event& resize_event);
 
-    std::shared_ptr<TermWidget> get_widget(std::string key);
+    std::shared_ptr<TermWidget> get_widget(const std::string& key) const;
 
     void move_to_front(std::shared_ptr<TermWidget> widget, bool b_focus = true);
 
