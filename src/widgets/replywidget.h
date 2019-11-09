@@ -11,7 +11,7 @@
 
 class BoxWidget;
 class ScrollPanelWidget;
-class TextWidget;
+class EditableTextWidget;
 
 
 class ReplyWidget : public TermWidget
@@ -26,16 +26,16 @@ protected:
 
     std::shared_ptr<BoxWidget> main_box;
     std::shared_ptr<ScrollPanelWidget> scroll_panel;
-    std::shared_ptr<TextWidget> post_text;
-    std::wstring post_text_buf;
-    int cursor_pos;
+    std::shared_ptr<EditableTextWidget> editable_text;
+    vector2d scroll_offset;
 
+    void update_scroll_offset();
     void submit_reply();
 
 
 public:
 
-    std::wstring& get_text_buffer() { return post_text_buf; };
+    const std::wstring& get_buffer() const;
     virtual void update_cursor_coord() override;
     virtual void rebuild(bool b_rebuild_children = true) override;
     virtual void child_widget_size_change_event() override;

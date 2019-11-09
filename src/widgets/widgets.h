@@ -10,6 +10,7 @@
 #include "termwidget.h"
 #include "colorblockwidget.h"
 #include "textwidget.h"
+#include "editabletextwidget.h"
 #include "boxwidget.h"
 #include "boxdividerwidget.h"
 #include "verticalboxwidget.h"

@@ -18,8 +18,7 @@ ReplyWidget::ReplyWidget(vector2d _offset, vector4d _padding, vector2d _size, ui
     fg_color = COLO.new_post_fg;
 
     main_box = nullptr;
-    post_text = nullptr;
-    cursor_pos = -1;
+    editable_text = nullptr;
 
     set_h_sizing(e_widget_sizing::ws_fullscreen);
     set_v_sizing(e_widget_sizing::ws_fullscreen);
@@ -33,14 +32,14 @@ void ReplyWidget::rebuild(bool b_rebuild_children)
 {
     update_size(false /* recursive */);
 
-    post_text = std::make_shared<TextWidget>(
-        vector2d(),
-        vector4d(1, 0, 1, 0),
-        COLO.new_post_bg,
-        COLO.new_post_fg);
-    post_text->set_h_sizing(e_widget_sizing::ws_fill);
-    post_text->set_v_sizing(e_widget_sizing::ws_dynamic);
-    post_text->append_text(post_text_buf, false);
+    if (!editable_text)
+    {
+        editable_text = std::make_shared<EditableTextWidget>(
+            vector2d(),
+            vector4d(1, 0, 1, 0),
+            COLO.new_post_bg,
+            COLO.new_post_fg);
+    }
 
     scroll_panel = std::make_shared<ScrollPanelWidget>(
         false,
@@ -49,7 +48,7 @@ void ReplyWidget::rebuild(bool b_rebuild_children)
         false,
         COLO.title_bg,
         COLO.title_fg);
-    scroll_panel->set_child_widget(post_text, false);
+    scroll_panel->set_child_widget(editable_text, false);
     scroll_panel->set_h_sizing(e_widget_sizing::ws_fill);
     scroll_panel->set_v_sizing(e_widget_sizing::ws_auto);
 
@@ -67,6 +66,32 @@ void ReplyWidget::rebuild(bool b_rebuild_children)
 
     set_child_widget(main_box, false);
     main_box->rebuild(true);
+
+    // scroll if necessary
+    update_cursor_coord();
+
+    // constraint:
+    //     a = x start
+    //     b = x end
+    //     c = y start
+    //     d = y end
+    vector4d constraint = scroll_panel->get_draw_constraint();
+    vector2d offs = cursor_coord;
+
+    if (offs.y + scroll_offset.y + 1 > constraint.d)
+    {
+        scroll_offset.y = -(offs.y - constraint.d + 1);
+        scroll_panel->set_scroll_position(scroll_offset);
+    }
+    else if (offs.y + scroll_offset.y < constraint.c)
+    {
+        scroll_offset.y = -(offs.y - constraint.c);
+        scroll_panel->set_scroll_position(scroll_offset);
+    }
+    else
+    {
+        scroll_panel->set_scroll_position(scroll_offset);
+    }
 }
 
 
@@ -109,11 +134,11 @@ void ReplyWidget::update_child_size(bool b_recursive)
 
 void ReplyWidget::update_cursor_coord()
 {
-    if (!post_text)
+    if (!editable_text)
         return;
 
-    cursor_coord = post_text->get_coord_of_index(cursor_pos);
-    cursor_coord.x += 1;
+    editable_text->update_cursor_coord();
+    cursor_coord = editable_text->get_cursor_coord();
 }
 
 
@@ -121,34 +146,28 @@ bool ReplyWidget::handle_key_input(const tb_event& input_event, bool b_bubble_up
 {
     bool b_handled = false;
 
-    if (!main_box || !post_text)
+    if (!main_box || !editable_text)
         return b_handled;
 
     if (input_event.ch != 0)
     {
-        post_text_buf += wchar_t(input_event.ch);
-        cursor_pos++;
-        post_text->append_char(wchar_t(input_event.ch), true, cursor_pos);
+        editable_text->insert_char(wchar_t(input_event.ch), false);
+        rebuild();
         WIDGET_MAN.draw_widgets();
-
         b_handled = true;
     }
     else if (input_event.key == TB_KEY_SPACE)
     {
-        post_text_buf += L" ";
-        cursor_pos++;
-        post_text->append_char(L' ', true, cursor_pos);
+        editable_text->insert_char(L' ', false);
+        rebuild();
         WIDGET_MAN.draw_widgets();
-
         b_handled = true;
     }
     else if (input_event.key == TB_KEY_ENTER)
     {
-        post_text_buf += L"\n";
-        cursor_pos++;
-        post_text->append_char(L'\n', true, cursor_pos);
+        editable_text->insert_char(L'\n', false);
+        rebuild();
         WIDGET_MAN.draw_widgets();
-
         b_handled = true;
     }
     else if (input_event.key == TB_KEY_BACKSPACE ||
@@ -156,24 +175,37 @@ bool ReplyWidget::handle_key_input(const tb_event& input_event, bool b_bubble_up
              input_event.key == TB_KEY_CTRL_8 ||
              input_event.key == TB_KEY_CTRL_H)
     {
-        if (post_text_buf.size() > 0)
-        {
-            if (cursor_pos + 1 < post_text_buf.length())
-            {
-                post_text_buf =
-                    post_text_buf.substr(0, cursor_pos) +
-                    post_text_buf.substr(cursor_pos + 1);
-            }
-            else
-            {
-                post_text_buf = post_text_buf.substr(0, cursor_pos);
-            }
-
-            post_text->remove_char(cursor_pos, true);
-            cursor_pos--;
-            WIDGET_MAN.draw_widgets();
-        }
-
+        editable_text->remove_char(false);
+        rebuild();
+        WIDGET_MAN.draw_widgets();
+        b_handled = true;
+    }
+    else if (input_event.key == TB_KEY_ARROW_LEFT)
+    {
+        editable_text->move_cursor_left();
+        rebuild();
+        WIDGET_MAN.draw_widgets();
+        b_handled = true;
+    }
+    else if (input_event.key == TB_KEY_ARROW_RIGHT)
+    {
+        editable_text->move_cursor_right();
+        rebuild();
+        WIDGET_MAN.draw_widgets();
+        b_handled = true;
+    }
+    else if (input_event.key == TB_KEY_ARROW_UP)
+    {
+        editable_text->move_cursor_up();
+        rebuild();
+        WIDGET_MAN.draw_widgets();
+        b_handled = true;
+    }
+    else if (input_event.key == TB_KEY_ARROW_DOWN)
+    {
+        editable_text->move_cursor_down();
+        rebuild();
+        WIDGET_MAN.draw_widgets();
         b_handled = true;
     }
     else if (input_event.key == TB_KEY_CTRL_P)
@@ -200,13 +232,22 @@ bool ReplyWidget::handle_key_input(const tb_event& input_event, bool b_bubble_up
 
 void ReplyWidget::receive_left_click(vector2d coord, TermWidget* clicked, TermWidget* source)
 {
-    if (!post_text)
+    if (!editable_text)
         return;
     
-    int index = post_text->get_index_at_coord(coord);
-    ERR(index, "CLICK INDEX");
-    cursor_pos = index;
-    WIDGET_MAN.draw_widgets();
+    //int index = editable_text->get_index_at_coord(coord);
+    //cursor_pos = index;
+    //WIDGET_MAN.draw_widgets();
+}
+
+
+const std::wstring& ReplyWidget::get_buffer() const
+{
+    static std::wstring empty_buf;
+    if (!editable_text)
+        return empty_buf;
+
+    return editable_text->get_buffer();
 }
 
 

@@ -14,7 +14,6 @@ namespace Colors
     {
         // color used as default term background
         uint8_t app_bg;
-        uint8_t cursor;
 
         // title
         uint8_t title_bg;
@@ -105,7 +104,6 @@ namespace Colors
     static const color_scheme COMFYBLUE
     {
         app_bg:                 16,
-        cursor:                 87,
 
         title_bg:               17,
         title_fg:               87,

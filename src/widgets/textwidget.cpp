@@ -20,7 +20,6 @@ TextWidget::TextWidget(vector2d _offset, vector4d _padding, uint32_t _bg_color, 
     b_parse_4chan = false;
     widest_row = 0;
     cell_index = 0;
-    consecutive_space_count = 0;
 }
 
 
@@ -300,136 +299,6 @@ void TextWidget::parse_4chan(std::vector<term_word>& words)
 }
 
 
-void TextWidget::append_char(wchar_t ch, bool b_rebuild, int index, bool b_bold, bool b_underline, bool b_reverse, uint32_t bg, uint32_t fg)
-{
-    if (bg == -1)
-        bg = bg_color;
-
-    if (fg == -1)
-        fg = fg_color;
-
-    if (ch == L'\n')
-    {
-        term_word nl_w = term_word::newline();
-        nl_w.bg = bg;
-        nl_w.fg = fg;
-        term_words.push_back(nl_w);
-    }
-    else
-    //else if (index == -1)
-    {
-        term_word* word = nullptr;
-        if (term_words.size() > 0)
-        {
-            auto& end_word = term_words.back();
-            if (!end_word.b_newline)
-            {
-                word = &end_word;
-            }
-        }
-
-        if (word)
-        {
-            word->text.append(1, ch);
-        }
-        else
-        {
-            std::wstring w = std::wstring(1, ch);
-            term_words.emplace_back(
-                w, bg, fg, b_bold, b_underline, b_reverse);
-        }
-    }
-    //else
-    //{
-    //    for (auto& word : term_words)
-    //    {
-    //        
-    //    }
-    //}
-
-    if (b_rebuild)
-        rebuild();
-}
-
-
-void TextWidget::remove_char(int index, bool b_rebuild)
-{
-    if (index < 0)
-        return;
-
-    std::vector<int> to_delete;
-    term_word* prev_word = nullptr;
-    int curr_index = 0;
-    for (int i = 0; i < term_words.size(); ++i)
-    {
-        auto& word = term_words[i];
-        if (curr_index == index)
-        {
-            if (word.text.length() > 1)
-            {
-                word.text = word.text.substr(0);
-            }
-            else
-            {
-                to_delete.push_back(i);
-            }
-            break;
-        }
-        else if (curr_index < index)
-        {
-            if (curr_index + word.text.length() >= index)
-            {
-                int d_index = index - curr_index;
-                if (d_index + 1 < word.text.length())
-                {
-                    word.text =
-                        word.text.substr(0, d_index) +
-                        word.text.substr(d_index + 1);
-                }
-                else
-                {
-                    word.text = word.text.substr(0, d_index);
-                }
-                break;
-            }
-            else
-            {
-                curr_index += word.text.length();
-            }
-        }
-
-        // space
-        curr_index++;
-
-        // deleting a space
-        if (curr_index == index)
-        {
-            // concatenate word with prev_word
-            // and delete this word
-            if (prev_word)
-            {
-                prev_word->text += word.text;
-                to_delete.push_back(i);
-            }
-            break;
-        }
-
-        prev_word = &word;
-    }
-
-    // delete words (to_delete is ordered from least to greatest)
-    for (int i = to_delete.size() - 1; i >= 0; --i)
-    {
-        int& w_index = to_delete[i];
-        if (w_index < term_words.size())
-            term_words.erase(term_words.begin() + w_index);
-    }
-
-    if (b_rebuild)
-        rebuild();
-}
-
-
 void TextWidget::append_text(const std::vector<term_word>& words)
 {
     for (const auto& w : words)
@@ -694,35 +563,5 @@ int TextWidget::get_index_at_coord(vector2d coord) const
     }
 
     return index;
-}
-
-
-vector2d TextWidget::get_coord_of_index(int index) const
-{
-    vector2d coord = get_absolute_offset();
-
-    if (index < 0)
-    {
-        coord.x--;
-        return coord;
-    }
-
-    int curr_index = 0;
-    for (int y = 0; y < cells.size(); ++y)
-    {
-        const auto& row = cells[y];
-        for (int x = 0; x < row.size(); ++x)
-        {
-            if (curr_index == index)
-            {
-                coord.x += x;
-                coord.y += y;
-                return coord;
-            }
-            curr_index++;
-        }
-    }
-
-    return coord;
 }
 
