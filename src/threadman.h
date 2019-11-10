@@ -13,7 +13,6 @@
 #include <list>
 #include <mutex> 
 #include <shared_mutex>
-#include <functional>
 #include <thread>
 
 template <typename T>

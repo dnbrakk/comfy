@@ -54,6 +54,8 @@ void EditableTextWidget::make_cells(std::vector<tb_cell>& row, const std::wstrin
 void EditableTextWidget::rebuild(bool b_rebuild_children)
 {
     cells.clear();
+    index_coord_map.clear();
+    coord_index_map.clear();
     widest_row = 0;
 
     int max_width = get_width_constraint();
@@ -87,9 +89,7 @@ void EditableTextWidget::rebuild(bool b_rebuild_children)
         }
 
         index_coord_map[index] = vector2d(width, cells.size());
-
-        index++;
-        width++;
+        coord_index_map[vector2d(width, cells.size())] = index; 
 
         // look ahead to see if word wrap is needed
         if (ch == L' ')
@@ -101,15 +101,20 @@ void EditableTextWidget::rebuild(bool b_rebuild_children)
                     break;
 
                 // next word exceeds max width, so wrap
-                if (j - index + width >= max_width)
+                if (j - index + width + 2 >= max_width)
                 {
+                    coord_index_map.erase(vector2d(width, cells.size()));
                     push_row(row);
-                    width = 0;
+                    width = -1;
                     index_coord_map[index] = vector2d(width, cells.size());
+                    coord_index_map[vector2d(width, cells.size())] = index; 
                     break;
                 }
             }
         }
+
+        index++;
+        width++;
     }
 
     if (row.size() > 0)
@@ -215,123 +220,84 @@ void EditableTextWidget::move_cursor_right()
 void EditableTextWidget::move_cursor_up()
 {
     if (cursor_pos < 1)
-        return;
-
-    vector2d curr_coord = get_coord_at_index(cursor_pos - 1);
-    if (curr_coord.y == 0 || (curr_coord.y == 1 && curr_coord.x == -1))
     {
-        cursor_pos = 0;
+        up_down_w_cache = 0;
         return;
     }
 
-    int last_in_row = 0;
+    vector2d coord = get_coord_at_index(cursor_pos - 1);
+    coord.y--;
 
-    for (int i = 0; i < buf.length(); ++i)
+    if (coord.y == -1)
     {
-        const vector2d& coord = get_coord_at_index(i);
-        if (coord.y == curr_coord.y - 1)
-        {
-            last_in_row = i;
-            // row above is longer than or same length
-            // as row cursor is on
-            if (coord.x == curr_coord.x)
-            {
-                int index = i;
-                int y = coord.y;
-                int x = coord.x;
-                // set index to up down cache if applicable
-                for (int j = i + 1; j < buf.length(); ++j)
-                {
-                    coord = get_coord_at_index(j);
-                    if (coord.y > y || coord.x == 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        x = coord.x;
-                        if (x > up_down_w_cache)
-                            break;
-
-                        index = j;
-                    }
-                }
-
-                cursor_pos = index + 1;
-                return;
-            }
-        }
-        // row above is shorter than row cursor is on
-        else if (coord.y == curr_coord.y)
-        {
-            if (curr_coord.x > up_down_w_cache)
-                up_down_w_cache = curr_coord.x;
-
-            cursor_pos = last_in_row + 1;
-            return;
-        }
+        up_down_w_cache = 0;
     }
+    else if (coord.x > up_down_w_cache)
+    {
+        up_down_w_cache = coord.x;
+    }
+    else if (up_down_w_cache > 0)
+    {
+        coord.x = up_down_w_cache;
+    }
+
+    cursor_pos = get_index_at_coord(coord) + 1;
 }
 
 
 void EditableTextWidget::move_cursor_down()
 {
     if (cursor_pos == buf.length())
-        return;
-
-    vector2d curr_coord = get_coord_at_index(cursor_pos - 1);
-    if (cursor_pos == 0)
-        curr_coord = vector2d(-1, 0);
-
-    int last_in_row = 0;
-
-    for (int i = 0; i < buf.length(); ++i)
     {
-        const vector2d& coord = get_coord_at_index(i);
-        if (coord.y == curr_coord.y + 1)
-        {
-            last_in_row = i;
-            // row below is longer than or same length
-            // as row cursor is on
-            if (coord.x == curr_coord.x || curr_coord.x < 0)
-            {
-                int index = i;
-                int y = coord.y;
-                int x = coord.x;
-                // set index to up down cache if applicable
-                for (int j = i + 1; j < buf.length(); ++j)
-                {
-                    coord = get_coord_at_index(j);
-                    if (coord.y > y || coord.x == 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        x = coord.x;
-                        if (x > up_down_w_cache)
-                            break;
-
-                        index = j;
-                    }
-                }
-
-                cursor_pos = index + 1;
-                return;
-            }
-        }
-        // last row
-        else if (curr_coord.y == cells.size() - 1)
-        {
-            last_in_row = i;
-        }
+        up_down_w_cache = 0;
+        return;
     }
 
-    if (curr_coord.x > up_down_w_cache)
-        up_down_w_cache = curr_coord.x;
+    vector2d coord = get_coord_at_index(cursor_pos - 1);
+    coord.y++;
 
-    // row below is shorter than row cursor is on
-    cursor_pos = last_in_row + 1;
+    if (coord.y == cells.size())
+    {
+        up_down_w_cache = 0;
+    }
+    else if (coord.x > up_down_w_cache)
+    {
+        up_down_w_cache = coord.x;
+    }
+    else if (up_down_w_cache > 0)
+    {
+        coord.x = up_down_w_cache;
+    }
+
+    cursor_pos = get_index_at_coord(coord) + 1;
+}
+
+
+int EditableTextWidget::get_index_at_coord(vector2d coord)
+{
+    try
+    {
+        int index = coord_index_map.at(coord);
+        return index;
+    }
+    catch (const std::out_of_range& oor)
+    {
+        if (coord.x > -1)
+        {
+            coord.x--;
+            return get_index_at_coord(coord);
+        }
+        else if (coord.y > -1)
+        {
+            coord.x = size.x;
+            coord.y--;
+            return get_index_at_coord(coord);
+        }
+        else
+        {
+            return -1;
+        }
+    }
 }
 
 
@@ -352,16 +318,6 @@ vector2d EditableTextWidget::get_coord_at_index(int index)
 void EditableTextWidget::update_cursor_coord()
 {
     cursor_coord = get_coord_at_index(cursor_pos - 1);
-    // if word has been wrapped
-    if (cursor_pos < buf.length())
-    {
-        vector2d adj = get_coord_at_index(cursor_pos);
-        const wchar_t& ch = buf[cursor_pos];
-        if (adj.y > cursor_coord.y && ch != L'\n')
-        {
-            cursor_coord = vector2d(-1, adj.y);
-        }
-    }
     cursor_coord += get_absolute_offset();
     cursor_coord.x++;
 }
@@ -369,5 +325,7 @@ void EditableTextWidget::update_cursor_coord()
 
 void EditableTextWidget::receive_left_click(vector2d coord, TermWidget* clicked, TermWidget* source)
 {
+    cursor_pos = get_index_at_coord(coord - get_absolute_offset());
+    WIDGET_MAN.draw_widgets();
 }
 

@@ -22,6 +22,8 @@ protected:
 
     // maps buffer index to cell coordinates
     std::map<int, vector2d> index_coord_map;
+    // maps cell coordinates to buffer index
+    std::unordered_map<vector2d, int> coord_index_map;
     std::wstring buf;
     int widest_row;
     int cursor_pos;
@@ -37,6 +39,7 @@ public:
 
     const std::wstring& get_buffer() const { return buf; };
     int get_cursor_pos() const { return cursor_pos; };
+    int get_index_at_coord(vector2d coord);
     vector2d get_coord_at_index(int index);
 
     virtual void rebuild(bool b_rebuild_children = true) override;

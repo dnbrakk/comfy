@@ -10,7 +10,6 @@
 
 #include "comfy.h"
 #include "imgman.h"
-#include <functional>
 
 struct GoogleCaptchaChallenge
 {

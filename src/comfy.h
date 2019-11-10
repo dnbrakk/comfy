@@ -12,8 +12,10 @@
 #include <sstream>
 #include <cctype>
 #include <algorithm>
+#include <functional>
 #include <memory>
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <set>
 #include <experimental/optional>
@@ -649,26 +651,42 @@ struct vector2d
         y -= other.y;
     }
 
-    inline vector2d operator+(const vector2d& other)
+    inline vector2d operator+(const vector2d& other) const
     {
         return vector2d(x + other.x, y + other.y);
     }
 
-    inline vector2d operator-(const vector2d& other)
+    inline vector2d operator-(const vector2d& other) const
     {
         return vector2d(x - other.x, y - other.y);
     }
 
-    inline bool operator==(const vector2d& other)
+    inline bool operator==(const vector2d& other) const
     {
         return x == other.x && y == other.y;
     }
 
-    inline bool operator!=(const vector2d& other)
+    inline bool operator!=(const vector2d& other) const
     {
         return x != other.x || y != other.y;
     }
 };
+
+
+namespace std
+{
+    template <>
+    struct hash<vector2d>
+    {
+        std::size_t operator()(const vector2d& v) const
+        {
+          using std::size_t;
+          using std::hash;
+
+          return (hash<int>()(v.x) ^ (hash<int>()(v.y) << 1));
+        }
+    };
+}
 
 
 struct vector4d

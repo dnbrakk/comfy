@@ -514,7 +514,7 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
     bool b_handled = false;
 
     // reload thread
-    if (input_event.key == TB_KEY_CTRL_R)
+    if (input_event.ch == TB_KEY_CTRL_R)
     {
         if (!b_reloading)
         {
@@ -608,11 +608,11 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
         return true;
     }
     // make reply
-    else if (input_event.key == TB_KEY_CTRL_P &&
+    else if (wchar_t(input_event.ch) == L'r' &&
              b_can_post_to && !b_archived)
     {
         auto np_id = thread_url;
-        np_id += "_NEW_POST";
+        np_id += "_NEW_REPLY";
         auto existing_wgt = WIDGET_MAN.get_widget(np_id);
         if (existing_wgt)
         {

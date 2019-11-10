@@ -150,7 +150,8 @@ void WidgetMan::run()
 
         int e_type = tb_peek_event(&input_event, 10 /* timeout in ms */);
         // key input
-        if (e_type == TB_EVENT_KEY || e_type == TB_EVENT_MOUSE)
+        if ((e_type == TB_EVENT_KEY && input_event.key != TB_KEY_ESC) ||
+             e_type == TB_EVENT_MOUSE)
         {
             if (input_event.key == TB_KEY_MOUSE_LEFT)
             {
