@@ -210,7 +210,7 @@ bool CatalogThread4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
     rebuild_vbox();
     main_box->rebuild();
 
-    //if (b_refresh_parent) catalog->refresh();
+    if (b_refresh_parent) catalog->refresh();
 
     return true;
 }

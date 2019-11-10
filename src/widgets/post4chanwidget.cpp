@@ -393,9 +393,7 @@ bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
         b_added = true;
     }
 
-    //rebuild_vbox();
-
-    //if (b_refresh_parent) thread->refresh();
+    if (b_refresh_parent) thread->refresh();
 
     return b_added;
 }

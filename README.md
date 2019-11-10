@@ -1,6 +1,6 @@
 # Comfy
 
-**Version:** 1.0.1
+**Version:** 1.0.2
 
 [https://wolfish.neocities.org/soft/comfy/](https://wolfish.neocities.org/soft/comfy)
 

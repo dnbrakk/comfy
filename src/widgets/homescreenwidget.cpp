@@ -224,6 +224,7 @@ void HomescreenWidget::show_about_info(HomescreenWidget* hs)
 
     // quotes
     about += "<br><br>\"...I would write programs all night, and around seven in the morning I'd go to sleep... What they had in common was mainly love of excellence in programming. They wanted to make their programs that they use be as good as they could. They also wanted to make them do neat things, they wanted to be able to do something in a more exciting way than anyone believed possible, and show 'look how wonderful this is! I bet you didn't believe this could be done.'\"<br> - Richard Stallman";
+    about += "<br><br>\"The FSF is full of crazy, bigoted people. That's just my opinion.\"<br> - Linus Torvalds";
     about += "<br><br>\"They got rid of CD/DVD. They are coming for our guns.\"<br> - Terry A. Davis";
 
     auto about_text = std::make_shared<TextWidget>(

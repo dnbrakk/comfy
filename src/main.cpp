@@ -62,6 +62,7 @@ void parse_opts(int argc, char* argv[])
         string help =   "Arguments:\n";
         help +=         "    -d    or  --disable-images       Disable images\n";
         help +=         "    -m n  or  --max-threads n        Set max number of concurrent threads, where n is max number\n";
+        help +=         "    -v    or  --version              Display version\n";
         help +=         "    -h    or  --help                 Print help (this message) and exit\n";
         help +=         "\n";
         help +=         "Controls:\n";
@@ -84,6 +85,14 @@ void parse_opts(int argc, char* argv[])
         help +=         "                                     full screen/close an image in a thread,\n";
         help +=         "                                     or go to a post in a thread (by clicking a post number link)\n";
         std::cout << help;
+        exit(0);
+    }
+
+    if (ops >> GetOpt::OptionPresent('v', "version"))
+    {
+        std::string ver = "Comfy ";
+        ver += VERSION;
+        std::cout << ver << std::endl;
         exit(0);
     }
 

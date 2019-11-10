@@ -47,6 +47,7 @@ protected:
 
     // seconds between auto refreshes
     int auto_ref_s;
+    uint32_t time_cache;
     std::chrono::milliseconds auto_refresh_interval;
     std::chrono::milliseconds auto_refresh_counter;
     std::chrono::milliseconds reload_flash_interval;

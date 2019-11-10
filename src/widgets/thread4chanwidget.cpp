@@ -25,6 +25,7 @@ Thread4chanWidget::Thread4chanWidget(data_4chan& chan_data, bool b_update)
     b_ticks = true;
     set_tick_rate(1000 / 30);
     auto_ref_s = 10;    // seconds
+    time_cache = -1;
     auto_refresh_interval = std::chrono::milliseconds(auto_ref_s * 1000);
     auto_refresh_counter = std::chrono::milliseconds(0);
     reload_flash_interval = std::chrono::milliseconds(333);
@@ -73,6 +74,7 @@ void Thread4chanWidget::tick_event(std::chrono::milliseconds delta)
         return;
     }
 
+    bool b_redraw = false;
     auto_refresh_counter += delta;
 
     // flash circle
@@ -99,6 +101,8 @@ void Thread4chanWidget::tick_event(std::chrono::milliseconds delta)
 
             b_reload_flash_sym = !b_reload_flash_sym;
             reload_flash_count++;
+            b_redraw = true;
+
             if (!b_reloading && reload_flash_count >= reload_flash_num)
             {
                 b_manual_update = false;
@@ -109,6 +113,11 @@ void Thread4chanWidget::tick_event(std::chrono::milliseconds delta)
                     footer_countdown = L"| Reload [paused]";
                     footer_info->append_text(footer_countdown, true);
                 }
+            }
+            else if (b_reloading && reload_flash_count >= reload_flash_num)
+            {
+                reload_flash_count = 0;
+                b_reload_flash_sym = !b_reload_flash_sym;
             }
         }
     }
@@ -142,12 +151,18 @@ void Thread4chanWidget::tick_event(std::chrono::milliseconds delta)
         footer_countdown += std::to_wstring(time);
         footer_countdown += L"s";
         footer_info->append_text(footer_countdown, true);
+
+        if (time != time_cache)
+            b_redraw = true;
+
+        time_cache = time;
     }
 
-    WIDGET_MAN.draw_widgets(
-        footer.get(),
-        false /* clear cells */,
-        false /* clear images */);
+    if (b_redraw)
+        WIDGET_MAN.draw_widgets(
+            footer.get(),
+            false /* clear cells */,
+            false /* clear images */);
 }
 
 

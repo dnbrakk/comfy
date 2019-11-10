@@ -34,7 +34,7 @@
 #define IMG_MAN             ImgMan::get_instance()
 
 
-static const std::string VERSION = "v. 1.0.1";
+static const std::string VERSION = "v. 1.0.2";
 
 extern std::string DATA_DIR;
 extern std::string IMAGEBOARDS_DIR;
