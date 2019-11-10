@@ -104,6 +104,20 @@ void CatalogThread4chanWidget::rebuild(bool b_rebuild_children)
                 catalog->get_id(),
                 std::to_string(post_num),
                 post_num);
+
+            // image box
+            image_box = std::make_shared<BoxWidget>(
+                vector2d(), // offset
+                vector4d(0, 0, 0, 1) // padding
+            );
+            image_box->set_h_align(e_widget_align::wa_center);
+            image_box->set_v_align(e_widget_align::wa_top);
+            image_box->set_h_sizing(e_widget_sizing::ws_auto);
+            image_box->set_v_sizing(e_widget_sizing::ws_auto);
+            image_box->set_child_padding(vector4d());
+            image_box->set_draw_border(false);
+            image_box->set_bg_color(COLO.thread_bg);
+            image_box->set_fg_color(COLO.thread_bg);
         }
 
         rebuild_vbox();
@@ -170,7 +184,8 @@ void CatalogThread4chanWidget::rebuild_vbox()
 bool CatalogThread4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
 {
     if (!DISPLAY_IMAGES || !catalog ||
-        !main_box || pac.is_video()) return false;
+        !main_box || pac.is_video())
+        return false;
 
     std::shared_ptr<ImageWidget> img = std::make_shared<ImageWidget>(
         pac,
@@ -188,24 +203,14 @@ bool CatalogThread4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
     // auto crop when going off screen
     // or scrolling within a widget
 
-    // image box
-    image_box = std::make_shared<BoxWidget>(
-        vector2d(), // offset
-        vector4d(0, 0, 0, 1) // padding
-    );
-    image_box->set_h_align(e_widget_align::wa_center);
-    image_box->set_v_align(e_widget_align::wa_top);
-    image_box->set_h_sizing(e_widget_sizing::ws_auto);
-    image_box->set_v_sizing(e_widget_sizing::ws_auto);
-    image_box->set_child_padding(vector4d());
-    image_box->set_draw_border(false);
-    image_box->set_bg_color(0);
-    image_box->set_fg_color(0);
+    image_box->set_bg_color(16);
+    image_box->set_fg_color(16);
     image_box->set_child_widget(img, true /* rebuild */);
 
     rebuild_vbox();
+    main_box->rebuild();
 
-    if (b_refresh_parent) catalog->refresh();
+    //if (b_refresh_parent) catalog->refresh();
 
     return true;
 }

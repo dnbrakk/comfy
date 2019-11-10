@@ -226,7 +226,7 @@ struct threadsafe_queue
     }
 
 
-    bool has_id(std::string& _id)
+    bool has_id(const std::string& _id)
     {
         if (id.compare(_id) == 0)
         {
@@ -330,7 +330,7 @@ struct threadsafe_list
     std::vector<K> checked_out;
 
 
-    static void check_in_callback(threadsafe_list<T, K>* ts_l, K& k)
+    static void check_in_callback(threadsafe_list<T, K>* ts_l, const K& k)
     {
         if (!ts_l) return;
         ts_l->check_in(k);
@@ -340,7 +340,7 @@ struct threadsafe_list
     // returns true if the item was removed
     // from the map, which occurs if there
     // exist no other checkout_tokens for the key
-    bool check_in(K& k)
+    bool check_in(const K& k)
     {
         {
             std::lock_guard<std::mutex> lock(list_mtx);
@@ -367,7 +367,7 @@ struct threadsafe_list
     }
 
 
-    bool is_checked_out(K& k)
+    bool is_checked_out(const K& k)
     {
         bool b_out = false;
 
@@ -396,7 +396,7 @@ struct threadsafe_list
     // in, and if no other checkout_tokens
     // for that value exist, the value is
     // removed from the map
-    std::shared_ptr<checkout_token> checkout(K& k)
+    std::shared_ptr<checkout_token> checkout(const K& k)
     {
         {
             std::lock_guard<std::mutex> lock(list_mtx);
@@ -520,7 +520,23 @@ struct threadsafe_list
     }
 
 
-    void remove(K k)
+    void move_to_front(const K& k)
+    {
+        std::shared_ptr<T> t = get(k);
+        remove(k);
+        push_front_and_self_checkout(t);
+    }
+
+
+    void move_to_back(const K& k)
+    {
+        std::shared_ptr<T> t = get(k);
+        remove(k);
+        push_back_and_self_checkout(t);
+    }
+
+
+    void remove(const K& k)
     {
         {
             std::lock_guard<std::mutex> lock(list_mtx);
@@ -556,7 +572,7 @@ struct threadsafe_list
     }
 
 
-    std::shared_ptr<T> get(K k)
+    std::shared_ptr<T> get(const K& k)
     {
         std::shared_ptr<T> t = nullptr;
 
@@ -576,6 +592,22 @@ struct threadsafe_list
         c_v.notify_one();
 
         return t;
+    }
+
+
+    int size()
+    {
+        int size = 0;
+
+        {
+            std::lock_guard<std::mutex> lock(list_mtx);
+
+            size = list.size();
+        }
+
+        c_v.notify_one();
+
+        return size;
     }
 
 
@@ -665,8 +697,10 @@ public:
     void replace_thread_semaphore();
     int get_thread_semaphore();
 
-    void kill_jobs(std::string job_pool_id);
-    void enqueue_job(std::function<void()> job, std::string job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = false);
+    void kill_jobs(const std::string& job_pool_id);
+    void move_jobs_to_front(const std::string& job_pool_id);
+    void move_jobs_to_back(const std::string& job_pool_id);
+    void enqueue_job(std::function<void()> job, const std::string& job_pool_id = DEFAULT_JOB_POOL_ID, bool b_push_to_front = false);
     static void start_thread(); // consumes jobs
     static void run_jobs();
     static void end_thread();

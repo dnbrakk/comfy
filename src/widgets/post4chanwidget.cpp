@@ -180,10 +180,6 @@ void Post4chanWidget::rebuild(bool b_rebuild_children)
         main_box->set_h_sizing(e_widget_sizing::ws_fill);
         main_box->set_v_sizing(e_widget_sizing::ws_auto);
 
-        rebuild_vbox();
-
-        set_child_widget(main_box, false /* rebuild */);
-
         if (DISPLAY_IMAGES)
         {
             // flag image
@@ -216,6 +212,19 @@ void Post4chanWidget::rebuild(bool b_rebuild_children)
                     thread->get_id(),
                     thread->get_thread_num_str(),
                     post_num);
+
+                // flag box
+                flag_box = std::make_shared<BoxWidget>(
+                    vector2d(), // offset
+                    vector4d(0, 0, 0, 0) // padding
+                );
+                flag_box->set_size(3, FLAG_IMG_H);
+                flag_box->set_h_sizing(e_widget_sizing::ws_fixed);
+                flag_box->set_v_sizing(e_widget_sizing::ws_fixed);
+                flag_box->set_child_padding(vector4d());
+                flag_box->set_draw_border(false);
+                flag_box->set_bg_color(COLO.post_bg);
+                flag_box->set_bg_color(COLO.post_bg);
             }
 
             // post images
@@ -234,8 +243,24 @@ void Post4chanWidget::rebuild(bool b_rebuild_children)
                     thread->get_id(),
                     thread->get_thread_num_str(),
                     post_num);
+
+                // image box
+                image_box = std::make_shared<BoxWidget>(
+                    vector2d(), // offset
+                    vector4d(0, 0, 0, 1) // padding
+                );
+                image_box->set_size(1, POST_IMG_H);
+                image_box->set_h_sizing(e_widget_sizing::ws_auto);
+                image_box->set_v_sizing(e_widget_sizing::ws_fixed);
+                image_box->set_child_padding(vector4d());
+                image_box->set_draw_border(false);
+                image_box->set_bg_color(COLO.post_bg);
+                image_box->set_fg_color(COLO.post_bg);
             }
         }   // endif (DISPLAY_IMAGES)
+
+        rebuild_vbox();
+        set_child_widget(main_box, false /* rebuild */);
     }
 
     if (b_rebuild_children)
@@ -336,17 +361,8 @@ bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
         img->set_h_sizing(e_widget_sizing::ws_fixed); // slave width to height
         img->set_v_sizing(e_widget_sizing::ws_dynamic);
 
-        // flag box
-        flag_box = std::make_shared<BoxWidget>(
-            vector2d(), // offset
-            vector4d(0, 0, 0, 0) // padding
-        );
-        flag_box->set_h_sizing(e_widget_sizing::ws_auto);
-        flag_box->set_v_sizing(e_widget_sizing::ws_auto);
-        flag_box->set_child_padding(vector4d());
-        flag_box->set_draw_border(false);
-        flag_box->set_bg_color(0);
-        flag_box->set_fg_color(0);
+        flag_box->set_fg_color(16);
+        flag_box->set_fg_color(16);
         flag_box->set_child_widget(img, true /* rebuild */);
 
         b_added = true;
@@ -370,25 +386,16 @@ bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
         // auto crop when going off screen
         // or scrolling within a widget
 
-        // image box
-        image_box = std::make_shared<BoxWidget>(
-            vector2d(), // offset
-            vector4d(0, 0, 0, 1) // padding
-        );
-        image_box->set_h_sizing(e_widget_sizing::ws_auto);
-        image_box->set_v_sizing(e_widget_sizing::ws_auto);
-        image_box->set_child_padding(vector4d());
-        image_box->set_draw_border(false);
-        image_box->set_bg_color(0);
-        image_box->set_fg_color(0);
+        image_box->set_bg_color(16);
+        image_box->set_fg_color(16);
         image_box->set_child_widget(img, true /* rebuild */);
 
         b_added = true;
     }
 
-    rebuild_vbox();
+    //rebuild_vbox();
 
-    if (b_refresh_parent) thread->refresh();
+    //if (b_refresh_parent) thread->refresh();
 
     return b_added;
 }

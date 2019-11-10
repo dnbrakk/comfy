@@ -338,16 +338,8 @@ void WidgetMan::load_image_data()
         //}
     }
 
-    // rebuild widgets that had images added to them
-    for (auto& w : wgts)
-    {
-        if (w)
-        {
-            w->refresh(false /* draw term */);
-        }
-    }
-
-    if (b_redraw) draw_widgets();
+    if (b_redraw)
+        draw_widgets();
 }
 
 
@@ -373,7 +365,12 @@ void WidgetMan::stop()
 
 void WidgetMan::switch_widget(std::shared_ptr<TermWidget> wgt)
 {
-    WIDGET_MAN.move_to_front(wgt, true);
+    if (wgt)
+    {
+        WIDGET_MAN.move_to_front(wgt, true);
+        THREAD_MAN.move_jobs_to_front(wgt->get_id());
+    }
+
     WIDGET_MAN.remove_widget(WIDGET_MAN.switch_widget_select);
     WIDGET_MAN.switch_widget_select = nullptr;
 }

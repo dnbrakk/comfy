@@ -49,7 +49,7 @@ int ThreadMan::get_thread_semaphore()
  // jobs //
 //////////
 
-void ThreadMan::enqueue_job(std::function<void()> job, std::string job_pool_id, bool b_push_to_front)
+void ThreadMan::enqueue_job(std::function<void()> job, const std::string& job_pool_id, bool b_push_to_front)
 {
     std::shared_ptr<function_queue> queue = job_pool_list.get(job_pool_id);
     if (queue)
@@ -95,12 +95,21 @@ void ThreadMan::enqueue_job(std::function<void()> job, std::string job_pool_id, 
 }
 
 
-void ThreadMan::kill_jobs(std::string job_pool_id)
+void ThreadMan::kill_jobs(const std::string& job_pool_id)
 {
     job_pool_list.remove(job_pool_id);
-    //ERR("KILLING JOBS: " + job_pool_id);
-    //ERR(job_pool_list.list.size(), "JOB POOL SIZE: ");
-    //ERR("________________");
+}
+
+
+void ThreadMan::move_jobs_to_front(const std::string& job_pool_id)
+{
+    job_pool_list.move_to_front(job_pool_id); 
+}
+
+
+void ThreadMan::move_jobs_to_back(const std::string& job_pool_id)
+{
+    job_pool_list.move_to_back(job_pool_id); 
 }
 
 

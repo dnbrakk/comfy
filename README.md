@@ -127,7 +127,6 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - When tofu (characters unsupported by terminal's font) gets displayed, it sometimes breaks the layout and/or leaves artifacts behind when scrolling (do a hard refresh by pressing F5 to get rid of the artifacts).
 - Image artifact remove cell sometimes appears at bottom right of switch widgets box.
 - Thread scroll position is sometimes changed when a new post is loaded after a reload.
-- Scrolling and other input is delayed/laggy when a catalog or thread is still loading images (as each image loaded causes the catalog or thread to rebuild).
 
 ### Contributing
 
