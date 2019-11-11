@@ -268,6 +268,22 @@ void Post4chanWidget::rebuild(bool b_rebuild_children)
         if (child_widget)
         {
             child_widget->rebuild(true);
+
+            // image has undersized height
+            if (image_box && image_box->get_child_widget() &&
+                image_box->get_child_widget()->get_size().y !=
+                image_box->get_size().y)
+            {
+                image_box->set_size(image_box->get_child_widget()->get_size());
+                image_box->rebuild(false);
+                rebuild_vbox();
+
+                if (vbox)
+                    vbox->rebuild(false);
+
+                if (main_box)
+                    main_box->rebuild(false);
+            }
         }
 
         update_size(true /* recursive */);
@@ -345,7 +361,8 @@ void Post4chanWidget::load_replies()
 bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
 {
     if (!DISPLAY_IMAGES || !thread ||
-        !main_box || pac.is_video()) return false;
+        !main_box || !vbox || pac.is_video())
+        return false;
 
     bool b_added = false;
 
@@ -356,15 +373,16 @@ bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
             pac,
             true, // maintain aspect ratio
             false, // fullscreen on click
-            vector2d(3, 1) // size
+            vector2d(-1, FLAG_IMG_H) // size
         );
         img->set_h_sizing(e_widget_sizing::ws_fixed); // slave width to height
         img->set_v_sizing(e_widget_sizing::ws_dynamic);
 
-        flag_box->set_fg_color(16);
-        flag_box->set_fg_color(16);
+        flag_box->set_fg_color(COLO.img_artifact_remove);
+        flag_box->set_fg_color(COLO.img_artifact_remove);
         flag_box->set_child_widget(img, true /* rebuild */);
 
+        b_refresh_parent = false;
         b_added = true;
     }
     // post image
@@ -386,14 +404,36 @@ bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
         // auto crop when going off screen
         // or scrolling within a widget
 
-        image_box->set_bg_color(16);
-        image_box->set_fg_color(16);
-        image_box->set_child_widget(img, true /* rebuild */);
+        image_box->set_bg_color(COLO.img_artifact_remove);
+        image_box->set_fg_color(COLO.img_artifact_remove);
+        image_box->set_child_widget(img, false /* rebuild */);
+        img->rebuild();
 
+        // image has undersized height
+        if (img->get_size().y != main_box->get_size().y)
+        {
+            image_box->set_size(img->get_size());
+        }
+        else
+        {
+            b_refresh_parent = false;
+        }
+
+        image_box->rebuild(false);
         b_added = true;
     }
 
-    if (b_refresh_parent) thread->refresh();
+    if (b_refresh_parent &&
+        thread->get_posts_vbox() &&
+        thread->get_scroll_panel())
+    {
+        rebuild_vbox();
+        vbox->rebuild(false);
+        main_box->rebuild(false);
+        update_size(false /* recursive */);
+        thread->get_posts_vbox()->rebuild(false);
+        thread->get_scroll_panel()->rebuild(false);
+    }
 
     return b_added;
 }

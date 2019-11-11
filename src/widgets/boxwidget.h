@@ -21,9 +21,32 @@ public:
 protected:
 
     bool b_draw_border;
+    // an alt color can be used for the box background
+    // beginning at an index.
+    // e.g., if the box is 10 x 10 term cells,
+    // and alt_color_start.x == 6 and
+    // alt_color_start.y == 6,
+    // then lines 6 to 10 will have the alt color
+    //
+    //      |-----------|
+    //      |           |
+    //      |           |
+    //      |-----------|
+    //      | alt color |
+    //      |-----------|
+    //
+    bool b_use_alt_color;
+    vector2d alt_color_start;
+    uint32_t alt_bg_color;
+    uint32_t alt_fg_color;
 
 
 public:
+
+    void set_use_alt_color(bool b_set) { b_use_alt_color = b_set; };
+    void set_alt_color_start(vector2d start) { alt_color_start = start; };
+    void set_alt_color_bg(uint32_t alt) { alt_bg_color = alt; };
+    void set_alt_color_fg(uint32_t alt) { alt_fg_color = alt; };
 
     void set_draw_border(bool b_set) { b_draw_border = b_set; };
 

@@ -230,24 +230,16 @@ void ImageWidget::draw(vector4d constraint, bool b_draw_children) const
     new_size = IMG_MAN.calc_img_size_term_chars(img_size_pix, w, h);
 
     if (absolute_offset.x < constraint.a)
-    {
         left = constraint.a - absolute_offset.x;
-    }
 
     if (absolute_offset.y < constraint.c)
-    {
         top = constraint.c - absolute_offset.y;
-    }
 
     if (absolute_offset.x + new_size.x > constraint.b)
-    {
         right = (absolute_offset.x + new_size.x) - constraint.b;
-    }
 
     if (absolute_offset.y + new_size.y > constraint.d)
-    {
         bottom = (absolute_offset.y + new_size.y) - constraint.d;
-    }
 
     last_crop = vector4d(left, top, right, bottom);
     vector2d offset_drawn = vector2d(
@@ -284,9 +276,7 @@ void ImageWidget::draw(vector4d constraint, bool b_draw_children) const
     last_offset_drawn = offset_drawn;
 
     if (size_drawn.is_zero())
-    {
         return;
-    }
 
     // prevent termbox from writing cells to where image is drawn
     for (int y = 0; y < last_size_drawn.y; ++y)

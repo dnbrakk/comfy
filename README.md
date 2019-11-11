@@ -28,6 +28,16 @@ make
 ./comfy
 ```
 
+#### On OpenSUSE (Tumbleweed -- should also work on Leap)
+
+```
+git clone https://gitgud.io/wolfish/comfy
+cd comfy
+zypper in -y make gcc gcc-c++ libX11-devel imlib2-devel libcurl-devel
+make
+./comfy
+```
+
 An option to compile without image support and X as a dependency will be added later.
 
 ##### Supported Terminal Emulators

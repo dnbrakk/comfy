@@ -150,7 +150,7 @@ namespace Colors
         switch_widget_fg:       87,
         switch_widget_border:   255,
 
-        img_artifact_remove:    55,
+        img_artifact_remove:    16,
     };
 };
 

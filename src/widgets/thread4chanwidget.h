@@ -14,6 +14,7 @@ class Post4chanWidget;
 class ColorBlockWidget;
 class ScrollPanelWidget;
 class BoxWidget;
+class VerticalBoxWidget;
 class TextWidget;
 
 
@@ -37,6 +38,7 @@ protected:
     std::shared_ptr<BoxWidget> footer;
     std::shared_ptr<TextWidget> footer_info;
     std::shared_ptr<BoxWidget> posts_box;
+    std::shared_ptr<VerticalBoxWidget> posts_vbox;
     std::vector<term_word> base_footer_text;
     std::shared_ptr<ScrollPanelWidget> scroll_panel;
 
@@ -66,6 +68,8 @@ protected:
 
 public:
 
+    std::shared_ptr<VerticalBoxWidget> get_posts_vbox() { return posts_vbox; };
+    std::shared_ptr<ScrollPanelWidget> get_scroll_panel() { return scroll_panel; };
     virtual bool on_received_update(data_4chan& chan_data) override;
 
     void scroll_to_post(int post_num);

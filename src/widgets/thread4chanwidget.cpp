@@ -225,7 +225,7 @@ void Thread4chanWidget::rebuild(bool b_rebuild_children)
     posts_box->set_draw_border(false);
 
     // posts vertical box container
-    std::shared_ptr<VerticalBoxWidget> posts_vbox = std::make_shared<VerticalBoxWidget>();
+    posts_vbox = std::make_shared<VerticalBoxWidget>();
 
     // posts scroll panel
     scroll_panel =
@@ -499,7 +499,7 @@ bool Thread4chanWidget::receive_img_packet(img_packet& pac)
     std::shared_ptr<Post4chanWidget> post = get_post(pac.post_key);
     if (post)
     {
-        return post->add_image(pac, false /* refresh thread */);
+        return post->add_image(pac, true /* refresh thread if needed */);
     }
 
     return false;

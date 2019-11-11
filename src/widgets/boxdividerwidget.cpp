@@ -27,7 +27,6 @@ void BoxDividerWidget::rebuild(bool b_rebuild_children)
 
     int p_size;
     tb_cell cell;
-    uint32_t unicode_char;
     std::vector<tb_cell> row;
 
     if (b_horizontal)
@@ -38,8 +37,7 @@ void BoxDividerWidget::rebuild(bool b_rebuild_children)
         set_size(p_size, 1);
 
         // left edge
-        tb_utf8_char_to_unicode(&unicode_char, "\u251C");
-        cell.ch = unicode_char;
+        cell.ch = L'\u251C';
         cell.bg = bg_color;
         cell.fg = fg_color;
         row.push_back(cell);
@@ -47,16 +45,14 @@ void BoxDividerWidget::rebuild(bool b_rebuild_children)
         // line
         for (int i = 0; i < p_size; ++i)
         {
-            tb_utf8_char_to_unicode(&unicode_char, "\u2500");
-            cell.ch = unicode_char;
+            cell.ch = L'\u2500';
             cell.bg = bg_color;
             cell.fg = fg_color;
             row.push_back(cell);
         }
         
         // right edge
-        tb_utf8_char_to_unicode(&unicode_char, "\u2524");
-        cell.ch = unicode_char;
+        cell.ch = L'\u2524';
         cell.bg = bg_color;
         cell.fg = fg_color;
         row.push_back(cell);
@@ -69,8 +65,7 @@ void BoxDividerWidget::rebuild(bool b_rebuild_children)
         set_size(1, p_size);
 
         // top edge
-        tb_utf8_char_to_unicode(&unicode_char, "\u252C");
-        cell.ch = unicode_char;
+        cell.ch = L'\u252C';
         cell.bg = bg_color;
         cell.fg = fg_color;
 
@@ -81,8 +76,7 @@ void BoxDividerWidget::rebuild(bool b_rebuild_children)
         // line
         for (int k = 0; k < p_size + 1; ++k)
         {
-            tb_utf8_char_to_unicode(&unicode_char, "\u2502");
-            cell.ch = unicode_char;
+            cell.ch = L'\u2502';
             cell.bg = bg_color;
             cell.fg = bg_color;
 
@@ -92,8 +86,7 @@ void BoxDividerWidget::rebuild(bool b_rebuild_children)
         }
 
         // bottom edge
-        tb_utf8_char_to_unicode(&unicode_char, "\u2534");
-        cell.ch = unicode_char;
+        cell.ch = L'\u2534';
         cell.bg = bg_color;
         cell.fg = fg_color;
 

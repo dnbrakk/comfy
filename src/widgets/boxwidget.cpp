@@ -14,6 +14,7 @@ BoxWidget::BoxWidget(vector2d _offset, vector4d _padding, vector2d _size, uint32
 , b_draw_border(true)
 {
     set_size(_size);
+    set_use_alt_color(false);
     rebuild();
 }
 
@@ -33,33 +34,56 @@ void BoxWidget::rebuild(bool b_rebuild_children)
     cells.clear();
 
     tb_cell cell;
-    uint32_t unicode_char;
     std::vector<tb_cell> row;
 
     if (b_draw_border)
     {
         // top left corner
-        tb_utf8_char_to_unicode(&unicode_char, "\u250C");
-        cell.ch = unicode_char;
-        cell.bg = bg_color;
-        cell.fg = fg_color;
+        cell.ch = L'\u250C';
+        if (b_use_alt_color &&
+            alt_color_start.y == 0 && alt_color_start.x == 0)
+        {
+            cell.bg = alt_bg_color;
+            cell.fg = alt_fg_color;
+        }
+        else
+        {
+            cell.bg = bg_color;
+            cell.fg = fg_color;
+        }
         row.push_back(cell);
 
         // top edge
         for (int i = 0; i < size.x - 2; ++i)
         {
-            tb_utf8_char_to_unicode(&unicode_char, "\u2500");
-            cell.ch = unicode_char;
-            cell.bg = bg_color;
-            cell.fg = fg_color;
+            cell.ch = L'\u2500';
+            if (b_use_alt_color &&
+                alt_color_start.y == 0 && i + 1 >= alt_color_start.x)
+            {
+                cell.bg = alt_bg_color;
+                cell.fg = alt_fg_color;
+            }
+            else
+            {
+                cell.bg = bg_color;
+                cell.fg = fg_color;
+            }
             row.push_back(cell);
         }
         
         // top right corner
-        tb_utf8_char_to_unicode(&unicode_char, "\u2510");
-        cell.ch = unicode_char;
-        cell.bg = bg_color;
-        cell.fg = fg_color;
+        cell.ch = L'\u2510';
+        if (b_use_alt_color && 
+            alt_color_start.y == 0 && alt_color_start.x <= size.x - 1)
+        {
+            cell.bg = alt_bg_color;
+            cell.fg = alt_fg_color;
+        }
+        else
+        {
+            cell.bg = bg_color;
+            cell.fg = fg_color;
+        }
         row.push_back(cell);
 
         cells.push_back(row);
@@ -80,30 +104,54 @@ void BoxWidget::rebuild(bool b_rebuild_children)
         if (b_draw_border)
         {
             // left side
-            tb_utf8_char_to_unicode(&unicode_char, "\u2502");
-            cell.ch = unicode_char;
-            cell.bg = bg_color;
-            cell.fg = fg_color;
+            cell.ch = L'\u2502';
+            if (b_use_alt_color && 
+                j >= alt_color_start.y && alt_color_start.x == 0)
+            {
+                cell.bg = alt_bg_color;
+                cell.fg = alt_fg_color;
+            }
+            else
+            {
+                cell.bg = bg_color;
+                cell.fg = fg_color;
+            }
             row.push_back(cell);
         }
 
         // whitespace
         for (int k = 0; k < x; ++k)
         {
-            tb_utf8_char_to_unicode(&unicode_char, " ");
-            cell.ch = unicode_char;
-            cell.bg = bg_color;
-            cell.fg = bg_color;
+            cell.ch = L' ';
+            if (b_use_alt_color && 
+                j >= alt_color_start.y && k >= alt_color_start.x)
+            {
+                cell.bg = alt_bg_color;
+                cell.fg = alt_fg_color;
+            }
+            else
+            {
+                cell.bg = bg_color;
+                cell.fg = fg_color;
+            }
             row.push_back(cell);
         }
 
         if (b_draw_border)
         {
             // right side
-            tb_utf8_char_to_unicode(&unicode_char, "\u2502");
-            cell.ch = unicode_char;
-            cell.bg = bg_color;
-            cell.fg = fg_color;
+            cell.ch = L'\u2502';
+            if (b_use_alt_color && 
+                j >= alt_color_start.y && alt_color_start.x <= size.x - 1)
+            {
+                cell.bg = alt_bg_color;
+                cell.fg = alt_fg_color;
+            }
+            else
+            {
+                cell.bg = bg_color;
+                cell.fg = fg_color;
+            }
             row.push_back(cell);
         }
 
@@ -114,27 +162,51 @@ void BoxWidget::rebuild(bool b_rebuild_children)
     if (b_draw_border)
     {
         // bottom left corner
-        tb_utf8_char_to_unicode(&unicode_char, "\u2514");
-        cell.ch = unicode_char;
-        cell.bg = bg_color;
-        cell.fg = fg_color;
+        cell.ch = L'\u2514';
+        if (b_use_alt_color &&
+            alt_color_start.y <= size.y - 1 && alt_color_start.x == 0)
+        {
+            cell.bg = alt_bg_color;
+            cell.fg = alt_fg_color;
+        }
+        else
+        {
+            cell.bg = bg_color;
+            cell.fg = fg_color;
+        }
         row.push_back(cell);
 
         // bottom edge
         for (int i = 0; i < size.x - 2; ++i)
         {
-            tb_utf8_char_to_unicode(&unicode_char, "\u2500");
-            cell.ch = unicode_char;
-            cell.bg = bg_color;
-            cell.fg = fg_color;
+            cell.ch = L'\u2500';
+            if (b_use_alt_color &&
+                alt_color_start.y <= size.y - 1 && i + 1 >= alt_color_start.x)
+            {
+                cell.bg = alt_bg_color;
+                cell.fg = alt_fg_color;
+            }
+            else
+            {
+                cell.bg = bg_color;
+                cell.fg = fg_color;
+            }
             row.push_back(cell);
         }
         
         // bottom right corner
-        tb_utf8_char_to_unicode(&unicode_char, "\u2518");
-        cell.ch = unicode_char;
-        cell.bg = bg_color;
-        cell.fg = fg_color;
+        cell.ch = L'\u2518';
+        if (b_use_alt_color && 
+            alt_color_start.y <= size.y && alt_color_start.x <= size.x - 1)
+        {
+            cell.bg = alt_bg_color;
+            cell.fg = alt_fg_color;
+        }
+        else
+        {
+            cell.bg = bg_color;
+            cell.fg = fg_color;
+        }
         row.push_back(cell);
 
         cells.push_back(row);

@@ -62,7 +62,7 @@ void parse_opts(int argc, char* argv[])
         string help =   "Arguments:\n";
         help +=         "    -d    or  --disable-images       Disable images\n";
         help +=         "    -m n  or  --max-threads n        Set max number of concurrent threads, where n is max number\n";
-        help +=         "    -v    or  --version              Display version\n";
+        help +=         "    -v    or  --version              Print version and exit\n";
         help +=         "    -h    or  --help                 Print help (this message) and exit\n";
         help +=         "\n";
         help +=         "Controls:\n";
