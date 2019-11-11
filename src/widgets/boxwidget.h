@@ -21,19 +21,17 @@ public:
 protected:
 
     bool b_draw_border;
-    // an alt color can be used for the box background
-    // beginning at an index.
+    // alt colors can be set beginning at coord x,y.
     // e.g., if the box is 10 x 10 term cells,
-    // and alt_color_start.x == 6 and
-    // alt_color_start.y == 6,
-    // then lines 6 to 10 will have the alt color
+    // and alt_color_start.x == 2 and
+    //     alt_color_start.y == 6, then:
     //
-    //      |-----------|
-    //      |           |
-    //      |           |
-    //      |-----------|
-    //      | alt color |
-    //      |-----------|
+    //      |--------------|
+    //      |              |
+    //      |              |
+    //      |  ------------|
+    //      |  | alt color |
+    //      |--------------|
     //
     bool b_use_alt_color;
     vector2d alt_color_start;

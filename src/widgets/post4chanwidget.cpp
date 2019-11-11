@@ -373,7 +373,7 @@ bool Post4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
             pac,
             true, // maintain aspect ratio
             false, // fullscreen on click
-            vector2d(-1, FLAG_IMG_H) // size
+            vector2d(3, FLAG_IMG_H) // size
         );
         img->set_h_sizing(e_widget_sizing::ws_fixed); // slave width to height
         img->set_v_sizing(e_widget_sizing::ws_dynamic);
