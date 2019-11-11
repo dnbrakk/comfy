@@ -28,7 +28,7 @@ make
 ./comfy
 ```
 
-#### On OpenSUSE (Tumbleweed -- should also work on Leap)
+##### On OpenSUSE (Tumbleweed -- should also work on Leap)
 
 ```
 zypper in -y make gcc gcc-c++ libX11-devel imlib2-devel libcurl-devel
@@ -137,6 +137,7 @@ Comfy has a built-in color scheme system, but right now there is only one hardco
 - When tofu (characters unsupported by terminal's font) gets displayed, it sometimes breaks the layout and/or leaves artifacts behind when scrolling (do a hard refresh by pressing F5 to get rid of the artifacts).
 - Image artifact remove cell sometimes appears at bottom right of switch widgets box.
 - Thread scroll position is sometimes changed when a new post is loaded after a reload.
+- Memory usage is relatively high when many threads with many images each are open at once. More efficient image caching solutions will be explored as the program develops.
 
 ### Contributing
 
