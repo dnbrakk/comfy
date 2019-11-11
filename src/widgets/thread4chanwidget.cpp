@@ -204,7 +204,7 @@ void Thread4chanWidget::rebuild(bool b_rebuild_children)
     }
 
     // main vertical box container
-    std::shared_ptr<VerticalBoxWidget> main_vbox = std::make_shared<VerticalBoxWidget>(false /* b_stretch_offscreen */);
+    main_vbox = std::make_shared<VerticalBoxWidget>(false /* b_stretch_offscreen */);
     main_vbox->set_h_sizing(e_widget_sizing::ws_fullscreen);
     main_vbox->set_v_sizing(e_widget_sizing::ws_fullscreen);
 
@@ -370,17 +370,6 @@ void Thread4chanWidget::rebuild(bool b_rebuild_children)
             // archived or not
             if (p.b_archived)
             {
-                header_info->append_text(
-                    "[Archived]",
-                    false,
-                    false,
-                    false,
-                    false,
-                    COLO.thread_header_bg,
-                    COLO.thread_archived
-                );
-                base_header_text = header_info->get_term_words();
-
                 b_archived = true;
             }
 
@@ -410,20 +399,8 @@ void Thread4chanWidget::rebuild(bool b_rebuild_children)
         post->load_replies();
     }
 
-    // saved or not
-    std::string thread_dir = get_file_save_dir(thread_url);
-    if (FileOps::file_exists(thread_dir + SAVE_FILE))
-    {
-        header_info->append_text(
-            "[Saved]",
-            false,
-            false,
-            false,
-            false,
-            COLO.thread_header_bg,
-            COLO.thread_saved
-        );
-    }
+    // append "[Archived]" and "[Saved]" etc.
+    update_header_info();
 
     base_footer_text = footer_info->get_term_words();
     if (!b_archived)
@@ -554,29 +531,41 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
     // mark or unmark thread dir for saving
     else if (b_can_save && input_event.key == TB_KEY_CTRL_S)
     {
-        std::string thread_dir = get_file_save_dir(thread_url);
-        if (!FileOps::file_exists(thread_dir + SAVE_FILE))
+        if (!is_saved())
         {
-            std::string save_data = thread_url;
-            save_data += "\n";
-            save_data += board;
-            save_data += "\n";
-            save_data += thread_num_str;
-            save_data += "\n";
-            // thread subject goes last because sometimes it is empty
-            save_data += thread_subject;
-            save_data += "\n\0";
-            FileOps::write_file(
-                thread_dir, SAVE_FILE, save_data.c_str(), save_data.size());
+            save_to_disk();
         }
         else
         {
-            FileOps::delete_file(thread_dir + SAVE_FILE);
+            delete_save_file();
         }
 
-        rebuild();
-        WIDGET_MAN.draw_widgets();
+        update_header_info();
 
+        int shrink = 0;
+        if (header)
+        {
+            header->rebuild(true);
+            shrink = header->get_height_constraint();
+        }
+
+        if (footer)
+            shrink += footer->get_height_constraint();
+
+        if (posts_box)
+        {
+            posts_box->set_size(1, term_h() - shrink);
+            posts_box->rebuild(false);
+        }
+
+        if (main_vbox)
+            main_vbox->rebuild(false);
+
+        if (scroll_panel)
+            scroll_panel->rebuild(false);
+
+        update_size(true);
+        WIDGET_MAN.draw_widgets();
         b_handled = true;
     }
     // enable or disable auto-update
@@ -631,6 +620,73 @@ bool Thread4chanWidget::handle_key_input(const tb_event& input_event, bool b_bub
     }
 
     return b_handled;
+}
+
+
+
+void Thread4chanWidget::save_to_disk() const
+{
+    if (!b_can_save)
+        return;
+
+    std::string save_data = thread_url;
+    save_data += "\n";
+    save_data += board;
+    save_data += "\n";
+    save_data += thread_num_str;
+    save_data += "\n";
+    // thread subject goes last because sometimes it is empty
+    save_data += thread_subject;
+    save_data += "\n\0";
+    std::string thread_dir = get_file_save_dir(thread_url);
+    FileOps::write_file(
+        thread_dir, SAVE_FILE, save_data.c_str(), save_data.size());
+}
+
+
+void Thread4chanWidget::delete_save_file() const
+{
+    std::string thread_dir = get_file_save_dir(thread_url);
+    FileOps::delete_file(thread_dir + SAVE_FILE);
+}
+
+
+bool Thread4chanWidget::is_saved() const
+{
+    std::string thread_dir = get_file_save_dir(thread_url);
+    return FileOps::file_exists(thread_dir + SAVE_FILE);
+}
+
+
+void Thread4chanWidget::update_header_info()
+{
+    if (header_info)
+    {
+        header_info->clear_text();
+        header_info->append_text(base_header_text);
+
+        if (b_archived)
+            header_info->append_text(
+                "[Archived]",
+                false,
+                false,
+                false,
+                false,
+                COLO.thread_header_bg,
+                COLO.thread_archived
+            );
+
+        if (is_saved())
+            header_info->append_text(
+                "[Saved]",
+                false,
+                false,
+                false,
+                false,
+                COLO.thread_header_bg,
+                COLO.thread_saved
+            );
+    }
 }
 
 

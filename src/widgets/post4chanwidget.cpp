@@ -261,9 +261,10 @@ void Post4chanWidget::rebuild(bool b_rebuild_children)
 
         rebuild_vbox();
         set_child_widget(main_box, false /* rebuild */);
+        main_box->rebuild(true);
+        update_size(true /* recursive */);
     }
-
-    if (b_rebuild_children)
+    else if (b_rebuild_children)
     {
         if (child_widget)
         {

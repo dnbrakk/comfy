@@ -31,9 +31,9 @@ make
 #### On OpenSUSE (Tumbleweed -- should also work on Leap)
 
 ```
+zypper in -y make gcc gcc-c++ libX11-devel imlib2-devel libcurl-devel
 git clone https://gitgud.io/wolfish/comfy
 cd comfy
-zypper in -y make gcc gcc-c++ libX11-devel imlib2-devel libcurl-devel
 make
 ./comfy
 ```

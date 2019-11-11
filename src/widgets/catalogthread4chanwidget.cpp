@@ -121,13 +121,11 @@ void CatalogThread4chanWidget::rebuild(bool b_rebuild_children)
         }
 
         rebuild_vbox();
-
         set_child_widget(main_box, false /* rebuild */);
         main_box->rebuild(true);
         update_size(true);
     }
-
-    if (b_rebuild_children)
+    else if (b_rebuild_children)
     {
         if (child_widget)
         {
@@ -203,14 +201,11 @@ bool CatalogThread4chanWidget::add_image(img_packet& pac, bool b_refresh_parent)
     // auto crop when going off screen
     // or scrolling within a widget
 
-    image_box->set_bg_color(16);
-    image_box->set_fg_color(16);
-    image_box->set_child_widget(img, true /* rebuild */);
+    image_box->set_bg_color(COLO.img_artifact_remove);
+    image_box->set_fg_color(COLO.img_artifact_remove);
+    image_box->set_child_widget(img, false /* rebuild */);
 
-    rebuild_vbox();
-    main_box->rebuild();
-
-    if (b_refresh_parent) catalog->refresh();
+    vbox->rebuild(true);
 
     return true;
 }

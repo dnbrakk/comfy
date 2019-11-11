@@ -27,54 +27,54 @@ void VerticalBoxWidget::rebuild(bool b_rebuild_children)
         {
             if (child) child->rebuild();
         }
+    }
 
-        int h = get_height_constraint();
+    int h = get_height_constraint();
 
-        int fixed_h = 0;
-        std::vector<TermWidget*> fill;
-        for (auto& child : children)
+    int fixed_h = 0;
+    std::vector<TermWidget*> fill;
+    for (auto& child : children)
+    {
+        if (child)
+        {
+            if (child->get_v_sizing() == ws_fill_managed)
+            {
+                fill.push_back(child.get());
+            }
+            else
+            {
+                vector4d pad = child->get_padding();
+                fixed_h += child->get_height_constraint() + pad.b + pad.d;
+            }
+        }
+    }
+
+    if (fill.size() > 0 && h > fixed_h)
+    {
+        // divide space up between fill widgets
+        int rem = h - fixed_h;
+        int div = (float)rem / (float)fill.size();
+        int _h = tb_height();
+        std::vector<TermWidget*> changed;
+        for (auto& child : fill)
         {
             if (child)
             {
-                if (child->get_v_sizing() == ws_fill_managed)
+                vector2d c_size = child->get_size();
+                vector4d c_pad = child->get_padding();
+                int new_h = div - c_pad.b - c_pad.d;
+                if (new_h != c_size.y)
                 {
-                    fill.push_back(child.get());
-                }
-                else
-                {
-                    vector4d pad = child->get_padding();
-                    fixed_h += child->get_height_constraint() + pad.b + pad.d;
+                    child->set_size(c_size.x, new_h);
+                    changed.push_back(child);
                 }
             }
         }
 
-        if (fill.size() > 0 && h > fixed_h)
+        // rebuild children whose sizes have changed
+        for (auto& child : changed)
         {
-            // divide space up between fill widgets
-            int rem = h - fixed_h;
-            int div = (float)rem / (float)fill.size();
-            int _h = tb_height();
-            std::vector<TermWidget*> changed;
-            for (auto& child : fill)
-            {
-                if (child)
-                {
-                    vector2d c_size = child->get_size();
-                    vector4d c_pad = child->get_padding();
-                    int new_h = div - c_pad.b - c_pad.d;
-                    if (new_h != c_size.y)
-                    {
-                        child->set_size(c_size.x, new_h);
-                        changed.push_back(child);
-                    }
-                }
-            }
-
-            // rebuild children whose sizes have changed
-            for (auto& child : changed)
-            {
-                if (child) child->rebuild();
-            }
+            if (child) child->rebuild(b_rebuild_children);
         }
     }
 
@@ -96,7 +96,14 @@ void VerticalBoxWidget::rebuild(bool b_rebuild_children)
         }
     }
 
-    set_size(width, height);
+    if (get_h_sizing() == ws_auto)
+    {
+        set_size(width, height);
+    }
+    else
+    {
+        set_size(get_width_constraint(), height);
+    }
 }
 
 

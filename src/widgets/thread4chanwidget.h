@@ -32,6 +32,7 @@ protected:
     std::string board;
     std::string thread_num_str;
     std::string thread_subject;
+    std::shared_ptr<VerticalBoxWidget> main_vbox;
     std::shared_ptr<BoxWidget> header;
     std::shared_ptr<TextWidget> header_info;
     std::vector<term_word> base_header_text;
@@ -65,11 +66,18 @@ protected:
     Post4chanWidget* selected_post;
     std::wstring footer_countdown;
 
+    void update_header_info();
+    void save_to_disk() const;
+    void delete_save_file() const;
+
 
 public:
 
     std::shared_ptr<VerticalBoxWidget> get_posts_vbox() { return posts_vbox; };
     std::shared_ptr<ScrollPanelWidget> get_scroll_panel() { return scroll_panel; };
+
+    bool is_saved() const;
+
     virtual bool on_received_update(data_4chan& chan_data) override;
 
     void scroll_to_post(int post_num);
